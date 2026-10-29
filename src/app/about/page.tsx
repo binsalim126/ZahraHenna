@@ -7,86 +7,81 @@ import {
   ShieldCheck,
   Leaf,
   Sparkles,
-  Users,
-  Award,
-  Heart,
   ArrowRight,
-  Clock,
+  Heart,
+  Droplet,
   CheckCircle2,
 } from "lucide-react";
-import { BRAND_CONFIG } from "@/lib/config";
 
 export default function AboutPage() {
-  const steps = [
+  const processSteps = [
     {
-      step: "01",
-      title: "Leaves Hand-Picked at Dawn",
-      desc: "Fresh green henna leaves are harvested at peak pigment maturity in Sojat, Rajasthan, alongside wild organic moringa leaves.",
-      icon: Leaf,
+      num: "01",
+      title: "Dawn Leaf Harvest",
+      desc: "Single-origin Rajasthani henna leaves picked at peak Lawsonia pigment maturity in Sojat.",
     },
     {
-      step: "02",
-      title: "Shade-Dried & Stone-Ground",
-      desc: "Leaves are dried in natural desert shade to protect chlorophyll and crushed on slow cold-stone mills without burning heat.",
-      icon: Sparkles,
+      num: "02",
+      title: "Slow Stone Crushed",
+      desc: "Shade-dried and cold-milled on traditional stone wheels to preserve vital plant nutrients.",
     },
     {
-      step: "03",
-      title: "Blended with Pure Oils",
-      desc: "Infused with therapeutic eucalyptus and cajeput essential oils to naturally trigger dye release for deep mahogany oxidation.",
-      icon: Heart,
+      num: "03",
+      title: "Essential Oil Infusion",
+      desc: "Blended with steam-distilled eucalyptus and cajeput oils for deep mahogany dye release.",
     },
     {
-      step: "04",
-      title: "Hand-Filled & Individually Sealed",
-      desc: "Carefully hand-poured into applicator cones and sealed in clear airtight plastic wrap to lock in moisture and peak freshness.",
-      icon: ShieldCheck,
+      num: "04",
+      title: "Sealed Fresh Weekly",
+      desc: "Hand-rolled into precision 0.38mm cones and airtight sealed in clear protective wrap.",
     },
   ];
 
-  const timeline = [
+  const standards = [
     {
-      year: "2019",
-      title: "The Search for Pure Henna",
-      desc: "Frustrated by severe chemical burns from commercial black henna cones filled with toxic PPD, Zahra set out to revive the ancestral art of 100% natural henna.",
+      icon: ShieldCheck,
+      title: "Zero PPD & Chemicals",
+      desc: "Completely free of coal-tar dyes, kerosene, and preservatives. 100% skin safe.",
     },
     {
-      year: "2021",
-      title: "Sojat & Moringa Breakthrough",
-      desc: "Partnered directly with generational farming families in Sojat, Rajasthan, and developed our signature moringa-infused paste for silky flow.",
+      icon: Droplet,
+      title: "0.38mm Needle Tip",
+      desc: "Ultra-fine tip allowing bridal artists to draw flawless lace and intricate mandalas.",
     },
     {
-      year: "2023",
-      title: "Loved by 500+ Bridal Artists",
-      desc: "Recognized nationwide by wedding mehndi specialists for guaranteed rich mahogany stain and individually sealed fresh cones.",
+      icon: Sparkles,
+      title: "Deep Mahogany Oxidation",
+      desc: "Naturally oxidizes into an intense dark-brown stain over 24 to 48 hours.",
     },
-    {
-      year: "2026",
-      title: "Direct Distributor to Your Doorstep",
-      desc: "Delivering freshly churned small batches directly to homes and studios with seamless WhatsApp ordering.",
-    },
+  ];
+
+  const stats = [
+    { num: "15,000+", label: "Happy Brides" },
+    { num: "85,000+", label: "Cones Rolled" },
+    { num: "5+ Years", label: "Artisan Craft" },
+    { num: "100%", label: "Pure Botanical" },
   ];
 
   return (
-    <div className="py-16 bg-luxury-home bg-henna-filigree min-h-screen space-y-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-moringa bg-moringa/15 px-3 py-1 rounded-full">
-            Our Journey
+    <div className="py-10 sm:py-16 bg-luxury-home bg-henna-filigree min-h-screen">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16">
+        {/* 1. Header (Minimalist & Focused) */}
+        <div className="text-center max-w-2xl mx-auto space-y-2.5">
+          <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.22em] text-moringa bg-moringa/15 px-3 py-1 rounded-full border border-moringa/25 inline-block">
+            Our Heritage & Craft
           </span>
-          <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-henna leading-tight tracking-tight">
-            Pure Botanical Beauty, Honoring Tradition
+          <h1 className="font-heading text-2xl sm:text-4xl font-extrabold text-henna tracking-tight">
+            Pure Botanical Henna, Honoring Tradition
           </h1>
-          <p className="text-xs sm:text-base text-henna-dark/75 leading-relaxed font-normal">
-            We are a dedicated manufacturer and distributor of 100% natural, chemical-free henna cones crafted for bridal artists and natural beauty lovers.
+          <p className="text-xs sm:text-sm text-henna-dark/75 leading-relaxed">
+            Fresh handcrafted cones and Rajasthani leaf powder, made without harsh chemicals.
           </p>
         </div>
 
-        {/* Narrative & Visual */}
-        <div className="bg-white rounded-3xl p-8 sm:p-14 border border-sand/20 shadow-md grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        {/* 2. Story Card with Image */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 sm:p-10 border border-sand/25 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-5 relative">
-            <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-xl border-4 border-white bg-cream">
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-luxury border-2 sm:border-4 border-white bg-cream">
               <Image
                 src="/assets/images/bridal-henna-hands.jpg"
                 alt="Zahra Henna bridal artwork with dark stain"
@@ -94,237 +89,129 @@ export default function AboutPage() {
                 priority
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-henna-dark/80 via-transparent to-transparent flex items-end p-6">
-                <span className="text-white text-xs font-medium">
-                  Intricate bridal henna stained with pure Zahra Henna cones
+              <div className="absolute inset-0 bg-gradient-to-t from-henna-dark/85 via-transparent to-transparent flex items-end p-4">
+                <span className="text-white text-[11px] font-medium leading-snug">
+                  48-hour natural mahogany oxidation with Zahra Henna paste
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-7 space-y-5">
-            <span className="text-xs font-bold uppercase tracking-wider text-moringa">
-              ✦ Handcrafted in Small Batches
+          <div className="lg:col-span-7 space-y-4 text-left">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-moringa block">
+              ✦ Handcrafted in Fresh Weekly Batches
             </span>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-henna leading-tight">
+            <h2 className="font-heading text-xl sm:text-3xl font-bold text-henna-dark leading-snug tracking-tight">
               "Henna should celebrate life, not burn your skin with chemicals."
             </h2>
-            <p className="text-xs sm:text-sm text-henna-dark/80 leading-relaxed font-normal">
-              Most store-bought cones contain industrial dyes (PPD), kerosene, and synthetic preservatives to give instantaneous black stains. These chemicals damage delicate skin and cause lasting allergic sensitization.
-            </p>
-            <p className="text-xs sm:text-sm text-henna-dark/80 leading-relaxed font-normal">
-              At Zahra Henna, we returned to first principles: pure single-origin henna leaves from Sojat, nutritious green moringa powder, cane sugar for skin adhesion, and natural eucalyptus oil. The result is a smooth caramel-brown paste that smells divine and stains deeply.
-            </p>
+            <div className="space-y-2.5 text-xs sm:text-sm text-henna-dark/80 leading-relaxed font-normal">
+              <p>
+                Commercial cones are often packed with industrial black dyes (PPD), kerosene, and synthetic binders to force an instant artificial black stain. These additives trigger severe allergic reactions and damage skin.
+              </p>
+              <p>
+                At <strong>Zahra Henna</strong>, we source single-origin Sojat leaves, triple-cloth-sieve them to a silk texture, and blend them with natural cane sugar, eucalyptus oil, and organic moringa. The result is a smooth paste that glides effortlessly and stains richly.
+              </p>
+            </div>
 
-            <div className="pt-2 flex items-center gap-4">
+            <div className="pt-2">
               <Link
                 href="/shop"
-                className="px-6 py-3 rounded-full bg-henna text-white font-medium text-xs uppercase tracking-wider hover:bg-henna-dark transition-all shadow-md inline-flex items-center gap-2"
+                className="btn-shimmer inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-henna text-white text-xs font-bold uppercase tracking-wider hover:bg-henna-dark shadow-sm"
               >
-                <span>Shop Fresh Cones</span>
+                <span>Browse Fresh Cones</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           </div>
         </div>
 
-        {/* Timeline: Our Journey */}
-        <div className="space-y-10">
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-moringa bg-moringa/15 px-3 py-1 rounded-full">
-              Our Journey
+        {/* 3. Purity Standards (3 Clean Pillars) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+          {standards.map((st, idx) => {
+            const Icon = st.icon;
+            return (
+              <div
+                key={idx}
+                className="bg-white/80 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border border-sand/20 shadow-xs space-y-2 text-left"
+              >
+                <div className="w-10 h-10 rounded-xl bg-moringa/15 text-moringa flex items-center justify-center mb-2">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <h3 className="font-heading font-bold text-sm text-henna">
+                  {st.title}
+                </h3>
+                <p className="text-xs text-henna-dark/70 leading-relaxed">
+                  {st.desc}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* 4. The 4-Step Craft Ritual (Minimalist Layout) */}
+        <div className="space-y-6">
+          <div className="text-center max-w-xl mx-auto space-y-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-moringa">
+              How It Is Made
             </span>
-            <h2 className="font-heading text-2xl sm:text-3xl font-bold text-henna tracking-tight">
-              From Kitchen Batches to National Trust
+            <h2 className="font-heading text-xl sm:text-2xl font-bold text-henna tracking-tight">
+              Our 4-Step Artisanal Process
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {timeline.map((item, idx) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            {processSteps.map((step, idx) => (
               <div
                 key={idx}
-                className="bg-white p-6 rounded-3xl border border-sand/20 shadow-sm space-y-3 relative"
+                className="bg-white/85 p-4 sm:p-5 rounded-2xl border border-sand/20 space-y-2 text-left shadow-xs"
               >
-                <span className="font-heading text-2xl font-bold text-sand block tracking-tight">
-                  {item.year}
-                </span>
-                <h3 className="font-heading font-bold text-base text-henna-dark tracking-tight">
-                  {item.title}
-                </h3>
-                <p className="text-xs text-henna-dark/70 leading-relaxed">
-                  {item.desc}
+                <div className="flex items-center justify-between">
+                  <span className="font-heading font-extrabold text-lg text-sand">
+                    {step.num}
+                  </span>
+                  <Leaf className="w-4 h-4 text-moringa/60" />
+                </div>
+                <h4 className="font-heading font-bold text-xs sm:text-sm text-henna-dark">
+                  {step.title}
+                </h4>
+                <p className="text-[11px] sm:text-xs text-henna-dark/70 leading-relaxed">
+                  {step.desc}
                 </p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Our Promise: Chemical-Free Products */}
-        <div className="bg-henna text-cream rounded-3xl p-8 sm:p-14 border border-sand/20 space-y-6">
-          <div className="max-w-2xl space-y-2">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-sand bg-sand/20 px-3 py-1 rounded-full">
-              Our Solemn Promise
-            </span>
-            <h2 className="font-heading text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Chemical-Free Henna Cones
-            </h2>
-            <p className="text-xs sm:text-sm text-cream/80 leading-relaxed">
-              We reject all harmful additives. Here is our transparent standard:
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
-            <div className="p-6 rounded-2xl bg-henna-dark/60 border border-sand/20 space-y-2">
-              <span className="text-red-400 font-bold text-base">✕ NO PPD</span>
-              <p className="text-xs text-cream/75">
-                Zero paraphenylenediamine or synthetic black coal-tar dyes that trigger allergic burns.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-henna-dark/60 border border-sand/20 space-y-2">
-              <span className="text-red-400 font-bold text-base">✕ NO CHEMICAL PRESERVATIVES</span>
-              <p className="text-xs text-cream/75">
-                We never add petroleum, gasoline, or artificial stabilizers. Our cones stay fresh by freezing!
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-henna-dark/60 border border-sand/20 space-y-2">
-              <span className="text-moringa-soft font-bold text-base">✓ 100% BOTANICALS</span>
-              <p className="text-xs text-cream/75">
-                Only pure Lawsonia inermis, moringa oleifera, unrefined sugar, and steam-distilled essential oils.
-              </p>
-            </div>
+        {/* 5. Minimalist Stats Strip (Proper font size and spacing, ZERO overlap on mobile) */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-sand/30 shadow-sm">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-center divide-x-0 sm:divide-x divide-sand/15">
+            {stats.map((s, idx) => (
+              <div key={idx} className="p-2 sm:px-4 space-y-1">
+                <span className="font-heading font-extrabold text-xl sm:text-2xl md:text-3xl text-henna block tracking-tight tabular-nums">
+                  {s.num}
+                </span>
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-moringa block">
+                  {s.label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* How We Make It: 4-Step Illustrated Process */}
-        <div className="space-y-10">
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-moringa bg-moringa/15 px-3 py-1 rounded-full">
-              Artisanal Craftsmanship
-            </span>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-henna">
-              How We Make Zahra Henna Cones
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {steps.map((s, idx) => {
-              const Icon = s.icon;
-              return (
-                <div
-                  key={idx}
-                  className="bg-white p-7 rounded-3xl border border-sand/20 shadow-sm space-y-4 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-moringa/15 text-moringa flex items-center justify-center">
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <span className="font-heading font-bold text-xl text-sand">
-                      {s.step}
-                    </span>
-                  </div>
-                  <h3 className="font-heading font-bold text-base text-henna-dark">
-                    {s.title}
-                  </h3>
-                  <p className="text-xs text-henna-dark/70 leading-relaxed">
-                    {s.desc}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Our Values */}
-        <div className="bg-cream-soft rounded-3xl p-8 sm:p-12 border border-sand/20 space-y-8">
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <h2 className="font-heading text-3xl font-bold text-henna">
-              Our 4 Core Values
-            </h2>
-            <p className="text-xs text-henna-dark/70">
-              The foundation of every batch we ship out.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-            <div className="space-y-2">
-              <div className="font-heading text-xl font-bold text-henna">Purity</div>
-              <p className="text-xs text-henna-dark/70">
-                100% natural ingredients. Transparent disclosure on every single pack.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <div className="font-heading text-xl font-bold text-henna">Quality</div>
-              <p className="text-xs text-henna-dark/70">
-                Smooth caramel paste and needle-thin 0.38mm tip for effortless precision.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <div className="font-heading text-xl font-bold text-henna">Tradition</div>
-              <p className="text-xs text-henna-dark/70">
-                Honoring ancestral Rajasthani shade drying and stone crushing heritage.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <div className="font-heading text-lg font-bold text-henna">Customer Trust</div>
-              <p className="text-xs text-henna-dark/70">
-                Direct WhatsApp relationship with our artisans for support and advice.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Stats Counters */}
-        <div className="bg-white p-8 sm:p-12 rounded-3xl border border-sand/20 shadow-sm grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div>
-            <div className="font-heading text-3xl sm:text-4xl font-bold text-henna tracking-tight">
-              15,000+
-            </div>
-            <div className="text-xs font-semibold text-moringa uppercase tracking-wider mt-1">
-              Happy Brides & Artists
-            </div>
-          </div>
-          <div>
-            <div className="font-heading text-3xl sm:text-4xl font-bold text-henna tracking-tight">
-              85,000+
-            </div>
-            <div className="text-xs font-semibold text-moringa uppercase tracking-wider mt-1">
-              Cones Handcrafted
-            </div>
-          </div>
-          <div>
-            <div className="font-heading text-3xl sm:text-4xl font-bold text-henna tracking-tight">
-              5+ Years
-            </div>
-            <div className="text-xs font-semibold text-moringa uppercase tracking-wider mt-1">
-              Small Batch Experience
-            </div>
-          </div>
-          <div>
-            <div className="font-heading text-3xl sm:text-4xl font-bold text-henna tracking-tight">
-              100%
-            </div>
-            <div className="text-xs font-semibold text-moringa uppercase tracking-wider mt-1">
-              Chemical-Free PPD 0%
-            </div>
-          </div>
-        </div>
-
-        {/* Final CTA to Shop */}
-        <div className="text-center space-y-4 pt-4">
-          <h3 className="font-heading text-2xl sm:text-3xl font-bold text-henna tracking-tight">
-            Experience the Zahra Henna Difference
+        {/* 6. Minimalist Final CTA */}
+        <div className="text-center space-y-3 pt-2">
+          <h3 className="font-heading text-xl sm:text-2xl font-bold text-henna tracking-tight">
+            Ready to Experience Fresh Zahra Cones?
           </h3>
-          <p className="text-xs sm:text-sm text-henna-dark/70 max-w-md mx-auto">
-            Order a pack of 12 cones or chat with us about wholesale quantities.
+          <p className="text-xs text-henna-dark/70 max-w-sm mx-auto">
+            Order fresh ready-to-use cones or get in touch for custom bridal bookings.
           </p>
           <div className="pt-2">
             <Link
               href="/shop"
-              className="btn-shimmer px-8 py-3.5 rounded-full bg-henna hover:bg-henna-dark text-white font-bold text-xs uppercase tracking-wider shadow-luxury inline-flex items-center gap-2"
+              className="btn-shimmer inline-flex items-center gap-2 px-7 py-3 rounded-full bg-henna text-white font-bold text-xs uppercase tracking-wider hover:bg-henna-dark shadow-luxury"
             >
-              <span>Explore The Shop</span>
+              <span>Explore Collection</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

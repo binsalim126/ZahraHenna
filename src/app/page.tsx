@@ -165,8 +165,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Trust Badges: LAST OF FIRST DISPLAY (Grounded at the very bottom of the Hero Section) */}
-          <div className="mt-8 sm:mt-12 pt-4 sm:pt-6 border-t border-sand/20 flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-8 text-xs sm:text-sm text-henna-dark/85 font-semibold">
+          {/* Trust Badges: Hidden on phone size, visible on desktop/tablet */}
+          <div className="mt-8 sm:mt-12 pt-4 sm:pt-6 border-t border-sand/20 hidden sm:flex flex-wrap items-center justify-start gap-6 lg:gap-8 text-xs sm:text-sm text-henna-dark/85 font-semibold">
             <div className="flex items-center gap-2 bg-white/70 sm:bg-transparent px-3 py-1.5 sm:p-0 rounded-full border border-sand/20 sm:border-0 shadow-sm sm:shadow-none">
               <ShieldCheck className="w-4 h-4 text-moringa flex-shrink-0" />
               <span>No PPD or Ammonia</span>

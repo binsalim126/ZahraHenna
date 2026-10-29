@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Lock, Mail, ArrowRight, ShieldCheck, ArrowLeft, Database, CheckCircle2 } from "lucide-react";
+import { Lock, Mail, ArrowRight, ShieldCheck, ArrowLeft } from "lucide-react";
 import { Logo } from "@/components/storefront/Logo";
 import { supabase } from "@/lib/supabase";
 
@@ -77,18 +77,6 @@ export default function AdminLoginPage() {
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md z-10 w-full">
         <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl border border-sand/30 shadow-luxury space-y-5">
-          {/* Supabase Connection Status Pill */}
-          <div className="flex items-center justify-between p-2.5 rounded-xl bg-cream border border-sand/25 text-[11px] text-henna-dark">
-            <div className="flex items-center gap-1.5 font-semibold">
-              <Database className="w-3.5 h-3.5 text-moringa" />
-              <span>Supabase Database</span>
-            </div>
-            <div className="flex items-center gap-1 text-moringa font-bold">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Connected</span>
-            </div>
-          </div>
-
           {error && (
             <div className="p-3 rounded-xl bg-red-50 text-red-600 text-xs font-semibold text-center border border-red-200">
               {error}
