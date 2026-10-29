@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import {
@@ -19,7 +19,46 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    // If on the login page, don't check authentication
+    if (pathname === "/admin/login") {
+      setIsAuthenticated(true);
+      return;
+    }
+
+    try {
+      const auth = localStorage.getItem("zahra_admin_auth");
+      if (auth === "true") {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+        router.replace("/admin/login");
+      }
+    } catch {
+      setIsAuthenticated(true);
+    }
+  }, [pathname, router]);
+
+  // If on login page, render children directly with NO admin shell
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
+
+  // Loading state while checking authentication
+  if (isAuthenticated === false || isAuthenticated === null) {
+    return (
+      <div className="min-h-screen bg-cream flex flex-col items-center justify-center p-4">
+        <div className="w-8 h-8 border-3 border-henna border-t-transparent rounded-full animate-spin mb-3" />
+        <p className="text-xs text-henna-dark/70 font-semibold">
+          Verifying Admin Access...
+        </p>
+      </div>
+    );
+  }
 
   const mobileNav = [
     { label: "Overview", href: "/admin", icon: LayoutDashboard },

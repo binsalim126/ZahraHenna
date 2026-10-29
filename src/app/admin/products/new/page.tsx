@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, Plus, Trash2, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft, Save, Plus, Trash2, Sparkles, Upload, Image as ImageIcon } from "lucide-react";
 import { Store } from "@/lib/data/store";
 import { ProductVariant } from "@/types";
 
@@ -24,8 +25,21 @@ export default function AdminNewProductPage() {
 
   // Images state
   const [imageUrl, setImageUrl] = useState(
-    "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1000&q=80"
+    "/assets/images/henna-cones-in-hand.png"
   );
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          setImageUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Variants state
   const [variants, setVariants] = useState<ProductVariant[]>([
@@ -197,16 +211,46 @@ export default function AdminNewProductPage() {
 
             <div>
               <label className="text-xs font-semibold text-henna-800 block mb-1">
-                Image URL (Photography Placeholder)
+                Product Image (Upload Photo or Paste Link)
               </label>
-              <input
-                type="url"
-                required
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full bg-cream-soft border border-henna-200 rounded-xl px-3.5 py-2.5 text-xs text-henna-900 focus:outline-none focus:border-terracotta"
-              />
+
+              {/* Direct image upload without link */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 bg-cream-soft p-3 rounded-2xl border border-henna-200">
+                <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-sand/30 bg-white flex-shrink-0 shadow-xs">
+                  {imageUrl ? (
+                    <Image
+                      src={imageUrl}
+                      alt="Product preview"
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-henna-dark/40">
+                      <ImageIcon className="w-5 h-5" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-1 w-full space-y-2">
+                  <label className="cursor-pointer inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 rounded-xl bg-henna text-white hover:bg-henna-dark font-bold text-xs transition-colors shadow-sm">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload Photo from Device</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                  </label>
+                  <input
+                    type="text"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="Or paste image URL link..."
+                    className="w-full bg-white border border-henna-200 rounded-lg px-2.5 py-1.5 text-xs text-henna-900 focus:outline-none"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -424,19 +468,19 @@ export default function AdminNewProductPage() {
         </div>
 
         {/* Submit */}
-        <div className="flex items-center justify-end gap-4">
+        <div className="flex items-center justify-end gap-3 pt-3">
           <Link
             href="/admin/products"
-            className="px-6 py-3 rounded-2xl bg-white border border-henna-300 text-henna-800 text-xs font-bold uppercase tracking-wider hover:bg-henna-100"
+            className="px-6 py-3.5 rounded-2xl bg-white border border-sand/40 text-henna-dark text-xs font-bold uppercase tracking-wider hover:bg-cream transition-colors shadow-sm"
           >
             Cancel
           </Link>
           <button
             type="submit"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-terracotta text-white text-xs font-bold uppercase tracking-wider hover:bg-terracotta-dark shadow-xl"
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-henna hover:bg-henna-dark text-white text-xs font-bold uppercase tracking-wider shadow-luxury transition-all active:scale-98"
           >
-            <Save className="w-4 h-4" />
-            <span>Publish Formulation</span>
+            <Save className="w-4 h-4 text-white" />
+            <span className="text-white">Publish Formulation</span>
           </button>
         </div>
       </form>

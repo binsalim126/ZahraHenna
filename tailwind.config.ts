@@ -29,6 +29,11 @@ const config: Config = {
           light: "#DE9F62",
           dark: "#9E6126",
         },
+        terracotta: {
+          DEFAULT: "#B5522B", // Warm Terracotta Accent
+          dark: "#943E1C",
+          light: "#D46D43",
+        },
         white: "#FFFFFF",
       },
       fontFamily: {

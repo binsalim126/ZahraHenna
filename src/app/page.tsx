@@ -102,20 +102,20 @@ export default function HomePage() {
             {/* Hero Copy - Clean Left Alignment on Phone, Tablet & Desktop */}
             <div className="lg:col-span-7 space-y-4 sm:space-y-6 text-left">
               {/* Eyebrow with horizontal dash line */}
-              <div className="inline-flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-bold uppercase tracking-[0.22em] text-moringa">
-                <span className="w-6 sm:w-12 h-[2px] bg-moringa inline-block rounded-full" />
+              <div className="inline-flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-extrabold uppercase tracking-[0.22em] text-moringa">
+                <span className="w-7 sm:w-12 h-[2.5px] bg-moringa inline-block rounded-full" />
                 <span>100% NATURAL • HARVEST 2026</span>
               </div>
 
-              {/* Bold 3-Tier Headline */}
-              <h1 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-extrabold text-henna-dark leading-[1.18] tracking-tight text-left">
+              {/* Bold 3-Tier Headline - Exciting & prominent on phone size */}
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-henna-dark leading-[1.15] tracking-tight text-left">
                 Pure Natural Henna, <br />
                 <span className="text-moringa">crafted by nature,</span> <br />
                 zero chemicals.
               </h1>
 
-              {/* Subtitle */}
-              <p className="text-xs sm:text-base lg:text-lg text-henna-dark/85 max-w-xl text-left leading-relaxed font-normal">
+              {/* Subtitle - Increased size for mobile readability */}
+              <p className="text-sm sm:text-base lg:text-lg text-henna-dark/85 max-w-xl text-left leading-relaxed font-normal">
                 We are <strong className="font-bold text-henna-dark">Zahra Henna</strong> — crafting fresh ready cones blended with single-origin Rajasthani henna leaves, organic moringa, and therapeutic oils for rich, dark-brown bridal stains.
               </p>
 
@@ -123,7 +123,7 @@ export default function HomePage() {
               <div className="pt-1 sm:pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-2.5 sm:gap-4">
                 <Link
                   href="/shop"
-                  className="btn-shimmer w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-henna text-white font-bold text-xs tracking-wider uppercase shadow-luxury hover:bg-henna-dark flex items-center justify-center gap-2 text-center"
+                  className="btn-shimmer w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-henna text-white font-bold text-xs sm:text-sm tracking-wider uppercase shadow-luxury hover:bg-henna-dark flex items-center justify-center gap-2 text-center"
                 >
                   <span>Shop Cones Now</span>
                   <ArrowRight className="w-4 h-4" />
@@ -131,26 +131,10 @@ export default function HomePage() {
 
                 <Link
                   href="/about"
-                  className="btn-outline-animated w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-white/80 backdrop-blur-sm border border-sand/50 text-henna font-bold text-xs tracking-wider uppercase hover:bg-white flex items-center justify-center gap-2 shadow-sm text-center"
+                  className="btn-outline-animated w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-white/80 backdrop-blur-sm border border-sand/50 text-henna font-bold text-xs sm:text-sm tracking-wider uppercase hover:bg-white flex items-center justify-center gap-2 shadow-sm text-center"
                 >
                   Our Story
                 </Link>
-              </div>
-
-              {/* Trust Badges */}
-              <div className="pt-4 sm:pt-6 border-t border-sand/20 flex flex-wrap items-center justify-start gap-3 sm:gap-6 text-[11px] sm:text-xs text-henna-dark/80 font-medium">
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-moringa flex-shrink-0" />
-                  <span>No PPD or Ammonia</span>
-                </div>
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-moringa flex-shrink-0" />
-                  <span>Individually Sealed</span>
-                </div>
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-moringa flex-shrink-0" />
-                  <span>WhatsApp Orders</span>
-                </div>
               </div>
             </div>
 
@@ -168,7 +152,7 @@ export default function HomePage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-henna-dark/85 via-transparent to-transparent flex items-end p-4 sm:p-6">
                     <div className="text-white text-left">
-                      <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-soft block">
+                      <span className="text-[10px] sm:text-xs uppercase font-bold tracking-widest text-soft block">
                         Fresh Weekly Batches
                       </span>
                       <p className="font-heading text-sm sm:text-lg font-bold">
@@ -178,6 +162,22 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Trust Badges: LAST OF FIRST DISPLAY (Grounded at the very bottom of the Hero Section) */}
+          <div className="mt-8 sm:mt-12 pt-4 sm:pt-6 border-t border-sand/20 flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-8 text-xs sm:text-sm text-henna-dark/85 font-semibold">
+            <div className="flex items-center gap-2 bg-white/70 sm:bg-transparent px-3 py-1.5 sm:p-0 rounded-full border border-sand/20 sm:border-0 shadow-sm sm:shadow-none">
+              <ShieldCheck className="w-4 h-4 text-moringa flex-shrink-0" />
+              <span>No PPD or Ammonia</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white/70 sm:bg-transparent px-3 py-1.5 sm:p-0 rounded-full border border-sand/20 sm:border-0 shadow-sm sm:shadow-none">
+              <CheckCircle2 className="w-4 h-4 text-moringa flex-shrink-0" />
+              <span>Individually Sealed</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white/70 sm:bg-transparent px-3 py-1.5 sm:p-0 rounded-full border border-sand/20 sm:border-0 shadow-sm sm:shadow-none">
+              <MessageCircle className="w-4 h-4 text-moringa flex-shrink-0" />
+              <span>WhatsApp Orders</span>
             </div>
           </div>
         </div>
