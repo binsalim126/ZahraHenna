@@ -41,15 +41,15 @@ export default function ShopPage() {
     <div className="py-12 bg-luxury-home bg-henna-filigree min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-moringa bg-moringa/15 px-3 py-1 rounded-full">
-            Ready-to-Use Cones & Powder
+        <div className="text-left max-w-2xl space-y-2">
+          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-moringa bg-moringa/15 px-3 py-1 rounded-full border border-moringa/25 inline-block">
+            100% Pure Botanical Collection
           </span>
-          <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-henna tracking-tight">
-            The Zahra Henna Shop
+          <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-henna tracking-tight text-left">
+            Ready-to-Use Cones & Powder
           </h1>
-          <p className="text-xs sm:text-sm text-henna-dark/75">
-            Every cone is hand-filled, individually sealed in clear wrap, and shipped fresh.
+          <p className="text-xs sm:text-sm text-henna-dark/75 leading-relaxed text-left">
+            Every cone is hand-filled, individually sealed in clear wrap, and shipped fresh across India.
           </p>
         </div>
 

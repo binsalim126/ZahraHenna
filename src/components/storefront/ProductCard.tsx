@@ -3,11 +3,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, ShoppingBag, Plus, Minus, Check, MessageCircle } from "lucide-react";
+import { Star, ShoppingBag, Plus, Minus, Check } from "lucide-react";
 import { Product } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/lib/cart-context";
-import { BRAND_CONFIG } from "@/lib/config";
 
 interface ProductCardProps {
   product: Product;
@@ -42,15 +41,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 1800);
-  };
-
-  const handleWhatsAppEnquiry = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const msg = encodeURIComponent(
-      `Hello Zahra Henna 👋 I would like to enquire about: ${product.title} (${currentVariant.name}) priced at ₹${displayPrice}.`
-    );
-    window.open(`https://wa.me/${BRAND_CONFIG.whatsappNumber}?text=${msg}`, "_blank");
   };
 
   return (
@@ -168,34 +158,27 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
           </div>
 
-          {/* Action Buttons: Add to Cart + WhatsApp Enquiry */}
-          <div className="flex flex-col sm:grid sm:grid-cols-2 gap-1.5 sm:gap-2 pt-1">
+          {/* Action Button: Add to Cart (NO WHATSAPP ON PRODUCT CARDS) */}
+          <div className="pt-1">
             <button
               onClick={handleAddToCart}
-              className={`btn-shimmer w-full py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl font-semibold text-[11px] sm:text-xs tracking-wider uppercase flex items-center justify-center gap-1 shadow-luxury ${
+              className={`btn-shimmer w-full py-2 sm:py-2.5 px-3 rounded-xl font-bold text-[11px] sm:text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 shadow-luxury transition-all ${
                 isAdded
                   ? "bg-moringa text-white"
-                  : "bg-henna text-white hover:bg-henna-dark"
+                  : "bg-henna text-white hover:bg-henna-dark active:scale-[0.98]"
               }`}
             >
               {isAdded ? (
                 <>
-                  <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> <span>Added</span>
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Added!</span>
                 </>
               ) : (
                 <>
-                  <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> <span>Add</span>
+                  <ShoppingBag className="w-3.5 h-3.5" />
+                  <span>Add to Cart</span>
                 </>
               )}
-            </button>
-
-            <button
-              onClick={handleWhatsAppEnquiry}
-              className="btn-outline-animated w-full py-1.5 sm:py-2.5 px-2 sm:px-3 rounded-xl bg-white hover:bg-moringa/10 text-moringa font-semibold text-[10px] sm:text-xs tracking-wide flex items-center justify-center gap-1 border border-moringa/40 shadow-sm"
-              title="Enquire on WhatsApp"
-            >
-              <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-              <span>WhatsApp</span>
             </button>
           </div>
         </div>
