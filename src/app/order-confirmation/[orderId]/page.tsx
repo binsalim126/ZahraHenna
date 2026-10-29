@@ -19,7 +19,7 @@ export default function OrderConfirmationPage({
     orderNumber: params.orderId,
     customerName: "Valued Customer",
     customerEmail: "care@zahrahenna.com",
-    customerPhone: "+91 98765 43210",
+    customerPhone: "+91 7907118180",
     status: "CONFIRMED",
     subtotal: 749,
     shippingCost: 0,
@@ -34,7 +34,7 @@ export default function OrderConfirmationPage({
       state: "Rajasthan",
       postalCode: "302001",
       country: "India",
-      phone: "+91 98765 43210",
+      phone: "+91 7907118180",
     },
     items: [
       {

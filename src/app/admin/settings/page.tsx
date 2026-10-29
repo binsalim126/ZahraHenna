@@ -37,7 +37,7 @@ export default function AdminSettingsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
               <label className="font-semibold text-henna-dark block mb-1">
-                WhatsApp Order Line (Country code + digits, e.g. 919876543210) *
+                WhatsApp Order Line (Country code + digits, e.g. 917907118180) *
               </label>
               <input
                 type="text"

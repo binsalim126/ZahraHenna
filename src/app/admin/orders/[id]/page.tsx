@@ -278,7 +278,7 @@ export default function AdminOrderDetailPage({
         <div className="border-t border-henna-200 pt-6 text-center text-[10px] text-henna-500 space-y-1">
           <p className="font-bold">100% Pure Sojat Henna • Zero Chemicals • Handmade in Small Batches</p>
           <p>
-            Store cones immediately in freezer upon arrival. For assistance: care@zahrahenna.com | +91 98765 43210
+            Store cones immediately in freezer upon arrival. For assistance: care@zahrahenna.com | +91 7907118180
           </p>
         </div>
       </div>

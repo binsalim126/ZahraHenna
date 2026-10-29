@@ -130,7 +130,7 @@ export default function CheckoutPage() {
           </h2>
           <Link
             href="/shop"
-            className="mt-4 inline-block px-6 py-2.5 rounded-full bg-henna-900 text-cream-soft text-xs font-bold uppercase tracking-wider hover:bg-terracotta"
+            className="mt-4 inline-block px-6 py-2.5 rounded-full bg-henna text-white text-xs font-bold uppercase tracking-wider hover:bg-henna-dark shadow-sm"
           >
             Return to Shop
           </Link>
