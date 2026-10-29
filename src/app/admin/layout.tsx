@@ -46,7 +46,7 @@ export default function AdminLayout({
         <AdminHeader onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
         {/* Main Content with bottom padding on mobile for the bottom bar */}
-        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 pb-24 md:pb-8 overflow-y-auto">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 pb-24 md:pb-8 overflow-y-auto max-w-full overflow-x-hidden">
           {children}
         </main>
 

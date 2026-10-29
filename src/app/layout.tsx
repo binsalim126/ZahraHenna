@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
-import { Navbar } from "@/components/storefront/Navbar";
-import { Footer } from "@/components/storefront/Footer";
-import { CartDrawer } from "@/components/storefront/CartDrawer";
-import { WhatsAppFloatingButton } from "@/components/storefront/WhatsAppFloatingButton";
+import { StorefrontShell } from "@/components/storefront/StorefrontShell";
 
 export const metadata: Metadata = {
   title: "Zahra Henna | 100% Natural. Zero Chemicals. Pure Henna.",
@@ -50,13 +47,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="min-h-screen flex flex-col bg-cream text-henna-dark antialiased selection:bg-sand selection:text-white">
+      <body className="min-h-screen flex flex-col bg-cream text-henna-dark antialiased selection:bg-sand selection:text-white overflow-x-hidden">
         <CartProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <CartDrawer />
-          <WhatsAppFloatingButton />
+          <StorefrontShell>{children}</StorefrontShell>
         </CartProvider>
       </body>
     </html>

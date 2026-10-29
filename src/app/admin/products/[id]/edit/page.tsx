@@ -109,7 +109,7 @@ export default function AdminEditProductPage({
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-16">
+    <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8 pb-16 w-full max-w-full overflow-x-hidden">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link
@@ -119,7 +119,7 @@ export default function AdminEditProductPage({
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="font-heading text-3xl font-bold text-henna-900">
+            <h1 className="font-heading text-2xl sm:text-3xl font-bold text-henna-900">
               Edit Formulation: {product.title}
             </h1>
             <p className="text-xs text-henna-600">
@@ -129,8 +129,8 @@ export default function AdminEditProductPage({
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-henna-200/90 shadow-sm space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+        <div className="bg-white p-4 sm:p-8 rounded-3xl border border-henna-200/90 shadow-sm space-y-5">
           <h2 className="font-heading font-bold text-xl text-henna-900">
             Product Identity
           </h2>
@@ -219,9 +219,9 @@ export default function AdminEditProductPage({
         </div>
 
         {/* Variants */}
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-henna-200/90 shadow-sm space-y-4">
+        <div className="bg-white p-4 sm:p-8 rounded-3xl border border-henna-200/90 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-heading font-bold text-xl text-henna-900">
+            <h2 className="font-heading font-bold text-lg sm:text-xl text-henna-900">
               Variants & Stock
             </h2>
             <button
@@ -238,7 +238,7 @@ export default function AdminEditProductPage({
             {variants.map((v, i) => (
               <div
                 key={v.id}
-                className="grid grid-cols-2 sm:grid-cols-6 gap-3 p-3.5 rounded-2xl bg-cream-soft border border-henna-200 items-center text-xs"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 p-3.5 rounded-2xl bg-cream-soft border border-henna-200 items-center text-xs"
               >
                 <div>
                   <label className="text-[10px] text-henna-600 block mb-0.5">

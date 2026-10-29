@@ -91,9 +91,114 @@ export default function AdminProductsPage() {
         </span>
       </div>
 
-      {/* Products Table */}
-      <div className="bg-white rounded-3xl border border-henna-200/80 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+      {/* Mobile Products List (Phone size: stacked cards, ZERO horizontal scrolling) */}
+      <div className="sm:hidden space-y-3">
+        {filtered.map((product) => {
+          const primaryImage = product.images[0]?.url || "";
+          const startingPrice =
+            product.variants[0]?.discountPrice || product.variants[0]?.price || 0;
+          const totalStock = product.variants.reduce(
+            (acc, v) => acc + v.stockQuantity,
+            0
+          );
+
+          return (
+            <div
+              key={product.id}
+              className="bg-white p-3.5 rounded-2xl border border-henna-200/80 shadow-sm space-y-3"
+            >
+              <div className="flex items-center gap-3">
+                <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-henna-50 flex-shrink-0 border border-henna-200">
+                  {primaryImage ? (
+                    <Image
+                      src={primaryImage}
+                      alt={product.title}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-henna-100" />
+                  )}
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-moringa block truncate">
+                    {product.categoryName || "Natural Henna"}
+                  </span>
+                  <h2 className="font-heading font-bold text-xs text-henna-dark line-clamp-1">
+                    {product.title}
+                  </h2>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="font-heading font-bold text-sm text-henna">
+                      {formatPrice(startingPrice)}
+                    </span>
+                    <span className="text-[10px] text-henna-dark/60">
+                      Stock: <strong className="font-bold text-henna">{totalStock}</strong>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status and Action Buttons */}
+              <div className="flex items-center justify-between pt-2 border-t border-henna-100/70 text-xs">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleToggleVisibility(product.id)}
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                      product.isVisible
+                        ? "bg-leaf/10 text-leaf"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {product.isVisible ? (
+                      <>
+                        <Eye className="w-3 h-3" /> Live
+                      </>
+                    ) : (
+                      <>
+                        <EyeOff className="w-3 h-3" /> Hidden
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => handleToggleFeatured(product.id)}
+                    className={`p-1 rounded-full transition-colors ${
+                      product.isFeatured
+                        ? "text-gold bg-gold/20"
+                        : "text-henna-300 hover:text-henna-500"
+                    }`}
+                    title="Toggle Featured"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/admin/products/${product.id}/edit`}
+                    className="inline-flex items-center gap-1 px-3 py-1 bg-henna-100 text-henna font-bold text-[11px] rounded-lg hover:bg-henna-200 transition-colors"
+                  >
+                    <Edit className="w-3 h-3" />
+                    <span>Edit</span>
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(product.id)}
+                    className="p-1.5 text-henna-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Delete Product"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop / Tablet Products Table */}
+      <div className="hidden sm:block bg-white rounded-3xl border border-henna-200/80 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto no-scrollbar">
           <table className="w-full text-left text-xs">
             <thead className="bg-henna-50/70 border-b border-henna-200 text-henna-600 uppercase tracking-wider">
               <tr>

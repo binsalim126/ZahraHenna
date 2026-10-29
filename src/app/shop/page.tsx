@@ -38,7 +38,7 @@ export default function ShopPage() {
   }, [products, search, selectedCategory, sortBy]);
 
   return (
-    <div className="py-12 bg-luxury-home bg-henna-filigree min-h-screen">
+    <div className="py-12 bg-luxury-home bg-henna-filigree min-h-screen overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Header */}
         <div className="text-left max-w-2xl space-y-2">
@@ -85,7 +85,7 @@ export default function ShopPage() {
           </div>
 
           {/* Category Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 border-t border-sand/15">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 pt-1 border-t border-sand/15">
             <button
               onClick={() => setSelectedCategory("all")}
               className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${

@@ -2,57 +2,38 @@
 
 import React from "react";
 import Link from "next/link";
-import { ExternalLink, Plus, Menu } from "lucide-react";
 
 interface AdminHeaderProps {
   onToggleSidebar?: () => void;
 }
 
-export const AdminHeader: React.FC<AdminHeaderProps> = ({ onToggleSidebar }) => {
+export const AdminHeader: React.FC<AdminHeaderProps> = () => {
   return (
-    <header className="bg-white border-b border-sand/20 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
-      <div className="flex items-center gap-2 sm:gap-3">
-        {/* Mobile Hamburger to open sidebar */}
-        <button
-          onClick={onToggleSidebar}
-          className="md:hidden p-1.5 rounded-xl text-henna-dark hover:bg-cream hover:text-henna transition-colors"
-          aria-label="Open sidebar menu"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <span className="text-xs sm:text-sm font-bold text-henna tracking-tight">
-            Zahra Henna
-          </span>
-          <span className="text-sand/60 text-xs">/</span>
-          <span className="text-[11px] sm:text-xs font-semibold text-moringa uppercase tracking-wider">
-            Admin Panel
-          </span>
-        </div>
+    <header className="bg-white border-b border-sand/20 px-4 sm:px-6 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+      {/* Title: Dashboard / Admin Panel */}
+      <div className="flex items-center gap-2">
+        <div className="w-2.5 h-2.5 rounded-full bg-moringa animate-pulse" />
+        <h1 className="font-heading font-extrabold text-base sm:text-lg text-henna tracking-tight">
+          Admin Panel
+        </h1>
+        <span className="text-[10px] text-henna-dark/60 font-semibold bg-cream px-2 py-0.5 rounded-full border border-sand/20 hidden sm:inline-block">
+          Zahra Henna Store
+        </span>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-3">
-        <Link
-          href="/admin/products/new"
-          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-henna text-white text-[11px] sm:text-xs font-bold hover:bg-henna-dark transition-all shadow-sm"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Add Product</span>
-          <span className="sm:hidden">Add</span>
-        </Link>
-
+      {/* User Image / Avatar Only */}
+      <div className="flex items-center gap-3">
         <Link
           href="/"
           target="_blank"
-          className="text-xs font-semibold text-henna hover:text-henna-dark transition-colors flex items-center gap-1 px-2.5 py-1.5 rounded-xl hover:bg-cream"
+          className="text-xs font-semibold text-henna hover:text-henna-dark transition-colors px-2.5 py-1 rounded-lg hover:bg-cream hidden sm:inline-block"
         >
-          <span className="hidden sm:inline">Live Store</span>
-          <ExternalLink className="w-3.5 h-3.5" />
+          Live Site ↗
         </Link>
-
-        {/* Profile Avatar */}
-        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-henna text-sand flex items-center justify-center font-bold text-xs shadow-sm">
+        <div
+          className="w-8 h-8 rounded-full bg-henna text-sand flex items-center justify-center font-extrabold text-xs shadow-sm border border-sand/40"
+          title="Admin User (Zahra Henna Owner)"
+        >
           A
         </div>
       </div>

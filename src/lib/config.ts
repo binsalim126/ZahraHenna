@@ -3,19 +3,18 @@ export const BRAND_CONFIG = {
   tagline: "100% Natural. Zero Chemicals. Pure Henna.",
   subtext: "Handcrafted natural henna cones made with pure henna leaf powder, moringa, and therapeutic essential oils for rich, dark-brown stains.",
   
-  // Single central WhatsApp Number (can also be read from process.env.NEXT_PUBLIC_WHATSAPP_NUMBER)
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210", // Placeholder: 91XXXXXXXXXX
-  
+  // Official WhatsApp Number
+  whatsappNumber: "917907118180",
+  phone: "+91 7907118180",
   email: "care@zahrahenna.com",
-  phone: "+91 98765 43210",
   location: "Artisanal Studio, Sojat, Rajasthan, India",
   
   socialLinks: {
-    instagram: "https://instagram.com/zahrahenna",
+    instagram: "https://www.instagram.com/zahra_hennaa?cplk=aGMzOXI3Zm16cWg5",
     facebook: "https://facebook.com/zahrahenna",
     youtube: "https://youtube.com/@zahrahenna",
     tiktok: "https://tiktok.com/@zahrahenna",
-    whatsapp: `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210"}`,
+    whatsapp: "https://wa.me/917907118180",
   },
 
   images: {

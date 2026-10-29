@@ -119,7 +119,7 @@ export default function AdminNewProductPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-16">
+    <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8 pb-16 w-full max-w-full overflow-x-hidden">
       {/* Top Bar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -130,7 +130,7 @@ export default function AdminNewProductPage() {
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="font-heading text-3xl font-bold text-henna-900">
+            <h1 className="font-heading text-2xl sm:text-3xl font-bold text-henna-900">
               Create New Formulation
             </h1>
             <p className="text-xs text-henna-600">
@@ -140,9 +140,9 @@ export default function AdminNewProductPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
         {/* Core Info Card */}
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-henna-200/90 shadow-sm space-y-5">
+        <div className="bg-white p-4 sm:p-8 rounded-3xl border border-henna-200/90 shadow-sm space-y-5">
           <h2 className="font-heading font-bold text-xl text-henna-900">
             Product Identity & Categorization
           </h2>
@@ -238,10 +238,10 @@ export default function AdminNewProductPage() {
         </div>
 
         {/* Variants, Pricing & Stock */}
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-henna-200/90 shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
+        <div className="bg-white p-4 sm:p-8 rounded-3xl border border-henna-200/90 shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="font-heading font-bold text-xl text-henna-900">
+              <h2 className="font-heading font-bold text-lg sm:text-xl text-henna-900">
                 Packaging Variants & Stock Quantities
               </h2>
               <p className="text-xs text-henna-500">
@@ -251,7 +251,7 @@ export default function AdminNewProductPage() {
             <button
               type="button"
               onClick={addVariant}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-henna-100 hover:bg-henna-200 text-henna-900 text-xs font-bold transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-henna-100 hover:bg-henna-200 text-henna-900 text-xs font-bold transition-colors w-fit"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Size / Variant</span>
@@ -262,7 +262,7 @@ export default function AdminNewProductPage() {
             {variants.map((v, i) => (
               <div
                 key={v.id}
-                className="grid grid-cols-2 sm:grid-cols-6 gap-3 p-3.5 rounded-2xl bg-cream-soft border border-henna-200 items-center text-xs"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 p-3.5 rounded-2xl bg-cream-soft border border-henna-200 items-center text-xs"
               >
                 <div>
                   <label className="text-[10px] text-henna-600 block mb-0.5">
@@ -356,7 +356,7 @@ export default function AdminNewProductPage() {
         </div>
 
         {/* Ingredients & Application */}
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-henna-200/90 shadow-sm space-y-4">
+        <div className="bg-white p-4 sm:p-8 rounded-3xl border border-henna-200/90 shadow-sm space-y-4">
           <h2 className="font-heading font-bold text-xl text-henna-900">
             Ingredients & Application Ritual
           </h2>

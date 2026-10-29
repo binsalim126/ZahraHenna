@@ -27,36 +27,16 @@ export default function HomePage() {
   const categories = Store.getCategories();
   const testimonials = Store.getTestimonials();
 
-  // Category & Sort State for Ready-to-Use Cones & Powder
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("featured");
-
-  // Filter and Sort Products
-  const displayedProducts = useMemo(() => {
-    let list = [...allProducts];
-
-    if (selectedCategory !== "all") {
-      list = list.filter((p) => p.categoryId === selectedCategory);
-    }
-
-    if (sortBy === "price-asc") {
-      list.sort((a, b) => {
-        const priceA = a.variants[0]?.discountPrice || a.variants[0]?.price || 0;
-        const priceB = b.variants[0]?.discountPrice || b.variants[0]?.price || 0;
-        return priceA - priceB;
-      });
-    } else if (sortBy === "price-desc") {
-      list.sort((a, b) => {
-        const priceA = a.variants[0]?.discountPrice || a.variants[0]?.price || 0;
-        const priceB = b.variants[0]?.discountPrice || b.variants[0]?.price || 0;
-        return priceB - priceA;
-      });
-    } else if (sortBy === "rating") {
-      list.sort((a, b) => (b.rating || 5) - (a.rating || 5));
-    }
-
-    return list;
-  }, [allProducts, selectedCategory, sortBy]);
+  // Popular Cones for Home Page (Phone side-scroller & desktop grid)
+  const popularProducts = useMemo(() => {
+    const cones = allProducts.filter(
+      (p) =>
+        p.isFeatured ||
+        p.categoryId?.includes("cone") ||
+        p.title.toLowerCase().includes("cone")
+    );
+    return (cones.length >= 2 ? cones : allProducts).slice(0, 4);
+  }, [allProducts]);
 
   // Lightbox state for Real Stain Results
   const [lightboxImage, setLightboxImage] = useState<{
@@ -207,21 +187,22 @@ export default function HomePage() {
       <QuoteMarquee />
 
       {/* =========================================================================
-          3. READY-TO-USE CONES & POWDER (WITH CATEGORY & SORT BY OPTIONS)
+          3. POPULAR HENNA CONES (PHONE SIDE-SCROLLING + DESKTOP RESPONSIVE GRID)
          ========================================================================= */}
       <section className="py-10 sm:py-16">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-5 sm:space-y-8">
           {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 text-left">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 text-left">
             <div>
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-moringa bg-moringa/15 px-3 py-1 rounded-full border border-moringa/25 inline-block">
-                Pure Natural Selection
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-moringa bg-moringa/15 px-3 py-1 rounded-full border border-moringa/25 inline-flex items-center gap-1.5">
+                <Sparkles className="w-3 h-3" />
+                <span>Most Loved Cones</span>
               </span>
               <h2 className="font-heading text-xl sm:text-3xl lg:text-4xl font-extrabold text-henna mt-2 tracking-tight text-left">
-                Ready-to-Use Cones & Powder
+                Popular Henna Cones
               </h2>
               <p className="text-xs sm:text-sm text-henna-dark/75 mt-1 font-normal">
-                Individually sealed cones with fine 0.38mm tip and triple-sieved Rajasthani leaf powder.
+                Individually sealed cones with fine 0.38mm pin-tip for rich mahogany stains.
               </p>
             </div>
 
@@ -234,59 +215,64 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Filter & Sort Bar (Optimized for Mobile Phone Swipe + Desktop) */}
-          <div className="bg-white/90 backdrop-blur-sm p-3 sm:p-4 rounded-2xl border border-sand/25 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            {/* Category Filter Pills (Horizontal swipe on phone) */}
-            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
-              <button
-                onClick={() => setSelectedCategory("all")}
-                className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                  selectedCategory === "all"
-                    ? "bg-henna text-white shadow-sm"
-                    : "bg-cream text-henna-dark hover:bg-sand/20"
-                }`}
-              >
-                All Products
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                    selectedCategory === cat.id
-                      ? "bg-henna text-white shadow-sm"
-                      : "bg-cream text-henna-dark hover:bg-sand/20"
-                  }`}
-                >
-                  {cat.name}
-                </button>
-              ))}
+          {/* PHONE SIZE: Smooth Horizontal Side Scroller with peek and snap */}
+          <div className="sm:hidden">
+            <div className="flex items-center justify-between text-[11px] text-henna-dark/60 font-medium mb-2 px-0.5">
+              <span>Bestselling Cones</span>
+              <span className="flex items-center gap-1 text-moringa font-bold">
+                Swipe sideways <span>→</span>
+              </span>
             </div>
 
-            {/* Sort By Dropdown */}
-            <div className="flex items-center justify-between sm:justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-sand/15">
-              <div className="flex items-center gap-1.5 text-xs text-henna-dark/70 font-semibold">
-                <SlidersHorizontal className="w-3.5 h-3.5 text-sand" />
-                <span>Sort by:</span>
+            <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 pt-0.5 px-0.5">
+              {popularProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="w-[260px] flex-shrink-0 snap-start h-full"
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))}
+
+              {/* End of mobile scroller: Browse all card */}
+              <div className="w-[200px] flex-shrink-0 snap-start flex flex-col items-center justify-center text-center p-5 rounded-2xl bg-white/90 backdrop-blur-sm border border-sand/30 shadow-sm space-y-3">
+                <div className="w-12 h-12 rounded-full bg-moringa/15 text-moringa flex items-center justify-center font-bold">
+                  <ArrowRight className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-heading font-bold text-sm text-henna">
+                    Full Collection
+                  </h4>
+                  <p className="text-[11px] text-henna-dark/70 mt-1">
+                    Discover all {allProducts.length} cones and powders
+                  </p>
+                </div>
+                <Link
+                  href="/shop"
+                  className="px-4 py-2 rounded-full bg-henna text-white text-[11px] font-bold uppercase tracking-wider hover:bg-henna-dark shadow-sm"
+                >
+                  View Shop
+                </Link>
               </div>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="bg-cream border border-sand/30 rounded-xl px-3 py-1.5 text-xs font-bold text-henna-dark focus:outline-none focus:ring-1 focus:ring-henna cursor-pointer"
-              >
-                <option value="featured">Featured Picks</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
-              </select>
             </div>
           </div>
 
-          {/* 2 Products in 1 row on Phone size, 3 on Desktop */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-6 lg:gap-8">
-            {displayedProducts.map((product) => (
+          {/* DESKTOP & TABLET: Clean Responsive Grid */}
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {popularProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
+          </div>
+
+          {/* Bottom Catalog CTA */}
+          <div className="text-center pt-2">
+            <Link
+              href="/shop"
+              className="btn-shimmer inline-flex items-center gap-2 px-6 py-3 rounded-full bg-henna text-white text-xs font-bold uppercase tracking-wider hover:bg-henna-dark shadow-luxury"
+            >
+              <span>Explore All Products ({allProducts.length})</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>
