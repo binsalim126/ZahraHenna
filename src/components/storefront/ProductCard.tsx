@@ -44,11 +44,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <div className="group relative bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl overflow-hidden border border-sand/25 hover:border-sand/60 hover:shadow-luxury-hover transition-all duration-300 flex flex-col h-full shadow-sm">
-      {/* Product Image Link */}
+    <div className="group relative bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl overflow-hidden border border-sand/25 hover:border-sand/60 hover:shadow-luxury-hover transition-all duration-300 flex flex-col h-full shadow-sm w-full">
+      {/* Product Image Link with standard aspect ratio */}
       <Link
         href={`/shop/${product.slug}`}
-        className="relative block aspect-square sm:aspect-[4/3] overflow-hidden bg-cream"
+        className="relative block aspect-square sm:aspect-[4/3] overflow-hidden bg-cream w-full flex-shrink-0"
       >
         <Image
           src={primaryImage}
@@ -73,10 +73,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
       </Link>
 
-      {/* Info Section */}
-      <div className="p-2.5 sm:p-5 flex-1 flex flex-col justify-between space-y-2 sm:space-y-4">
+      {/* Info Section - Uniform structure across all cards */}
+      <div className="p-2.5 sm:p-5 flex-1 flex flex-col justify-between">
         <div>
-          <div className="flex items-center justify-between text-[10px] sm:text-xs text-henna-dark/70 mb-0.5 sm:mb-1">
+          {/* Category & Rating */}
+          <div className="h-4 sm:h-5 flex items-center justify-between text-[10px] sm:text-xs text-henna-dark/70 mb-1">
             <span className="font-semibold uppercase tracking-wider text-moringa truncate max-w-[90px] sm:max-w-none">
               {product.categoryName}
             </span>
@@ -86,41 +87,50 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
           </div>
 
+          {/* Title - Fixed height so 1-line and 2-line titles reserve the exact same space */}
           <Link href={`/shop/${product.slug}`} className="block group-hover:text-henna transition-colors">
-            <h3 className="font-heading font-bold text-henna-dark text-xs sm:text-base leading-tight sm:leading-snug line-clamp-2 tracking-tight">
+            <h3 className="font-heading font-bold text-henna-dark text-xs sm:text-base leading-tight sm:leading-snug line-clamp-2 tracking-tight h-8 sm:h-11 flex items-start">
               {product.title}
             </h3>
           </Link>
 
-          <p className="hidden sm:block text-xs text-henna-dark/70 mt-1 line-clamp-2 leading-relaxed">
+          {/* Short Description (desktop only, with fixed height) */}
+          <p className="hidden sm:block text-xs text-henna-dark/70 mt-1 line-clamp-2 leading-relaxed h-8">
             {product.shortDesc}
           </p>
         </div>
 
-        <div className="space-y-2 sm:space-y-3 pt-2 sm:pt-3 border-t border-sand/15">
-          {/* Variant Selector Pills if multiple */}
-          {product.variants.length > 1 && (
-            <div className="flex flex-wrap gap-1">
-              {product.variants.map((v, idx) => (
-                <button
-                  key={v.id}
-                  onClick={() => setSelectedVariantIdx(idx)}
-                  className={`text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full border transition-all ${
-                    selectedVariantIdx === idx
-                      ? "border-henna bg-henna text-white font-semibold"
-                      : "border-sand/30 text-henna-dark hover:border-henna"
-                  }`}
-                >
-                  {v.name}
-                </button>
-              ))}
-            </div>
-          )}
+        {/* Bottom Section - Guaranteed Uniform Alignment Across All Cards */}
+        <div className="mt-auto pt-2 sm:pt-3 border-t border-sand/15 flex flex-col gap-2 sm:gap-2.5">
+          {/* Variant Selector Row: Fixed h-6 sm:h-7 for ALL cards */}
+          <div className="h-6 sm:h-7 flex items-center overflow-hidden">
+            {product.variants.length > 1 ? (
+              <div className="flex items-center gap-1 overflow-x-auto no-scrollbar w-full py-0.5">
+                {product.variants.map((v, idx) => (
+                  <button
+                    key={v.id}
+                    onClick={() => setSelectedVariantIdx(idx)}
+                    className={`text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full border whitespace-nowrap flex-shrink-0 transition-all ${
+                      selectedVariantIdx === idx
+                        ? "border-henna bg-henna text-white font-semibold"
+                        : "border-sand/30 text-henna-dark hover:border-henna bg-cream/50"
+                    }`}
+                  >
+                    {v.name}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <span className="text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full border border-sand/25 bg-cream/70 text-henna-dark/75 font-medium whitespace-nowrap truncate max-w-full inline-block">
+                {currentVariant.name}
+              </span>
+            )}
+          </div>
 
-          {/* Price & Quantity Stepper */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-baseline gap-1 sm:gap-2">
-              <span className="font-heading text-sm sm:text-xl font-bold text-henna tracking-tight">
+          {/* Price & Quantity Stepper Row - Fixed h-7 sm:h-8 */}
+          <div className="h-7 sm:h-8 flex items-center justify-between">
+            <div className="flex items-baseline gap-1 sm:gap-1.5">
+              <span className="font-heading text-sm sm:text-lg font-bold text-henna tracking-tight">
                 {formatPrice(displayPrice)}
               </span>
               {originalPrice && (
@@ -158,11 +168,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
           </div>
 
-          {/* Action Button: Add to Cart (NO WHATSAPP ON PRODUCT CARDS) */}
-          <div className="pt-1">
+          {/* Action Button: Add to Cart (NO WHATSAPP ON PRODUCT CARDS) - Fixed h-8 sm:h-9 */}
+          <div className="w-full">
             <button
               onClick={handleAddToCart}
-              className={`btn-shimmer w-full py-2 sm:py-2.5 px-3 rounded-xl font-bold text-[11px] sm:text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 shadow-luxury transition-all ${
+              className={`btn-shimmer w-full h-8 sm:h-9 px-3 rounded-xl font-bold text-[10px] sm:text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 shadow-sm transition-all ${
                 isAdded
                   ? "bg-moringa text-white"
                   : "bg-henna text-white hover:bg-henna-dark active:scale-[0.98]"
