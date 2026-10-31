@@ -23,9 +23,18 @@ import { QuoteMarquee } from "@/components/storefront/QuoteMarquee";
 import { ProductCard } from "@/components/storefront/ProductCard";
 
 export default function HomePage() {
-  const allProducts = Store.getProducts();
+  const [allProducts, setAllProducts] = useState(Store.getProducts());
   const categories = Store.getCategories();
   const testimonials = Store.getTestimonials();
+
+  React.useEffect(() => {
+    setAllProducts(Store.getProducts());
+    const handleUpdate = () => {
+      setAllProducts([...Store.getProducts()]);
+    };
+    window.addEventListener("zh-products-changed", handleUpdate);
+    return () => window.removeEventListener("zh-products-changed", handleUpdate);
+  }, []);
 
   // Popular Cones for Home Page (Phone side-scroller & desktop grid)
   const popularProducts = useMemo(() => {

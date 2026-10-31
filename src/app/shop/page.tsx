@@ -6,12 +6,23 @@ import { Store } from "@/lib/data/store";
 import { ProductCard } from "@/components/storefront/ProductCard";
 
 export default function ShopPage() {
-  const products = Store.getProducts();
-  const categories = Store.getCategories();
+  const [products, setProducts] = useState(Store.getProducts());
+  const [categories, setCategories] = useState(Store.getCategories());
 
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("featured");
+
+  React.useEffect(() => {
+    setProducts(Store.getProducts());
+    setCategories(Store.getCategories());
+    const handleUpdate = () => {
+      setProducts([...Store.getProducts()]);
+      setCategories([...Store.getCategories()]);
+    };
+    window.addEventListener("zh-products-changed", handleUpdate);
+    return () => window.removeEventListener("zh-products-changed", handleUpdate);
+  }, []);
 
   const filteredProducts = useMemo(() => {
     return products

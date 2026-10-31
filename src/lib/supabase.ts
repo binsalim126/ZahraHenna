@@ -100,3 +100,19 @@ export async function syncProductToSupabase(product: Product) {
     return { error: err };
   }
 }
+
+/**
+ * Delete a product from Supabase products table
+ */
+export async function deleteProductFromSupabase(id: string) {
+  try {
+    const { data, error } = await supabase.from("products").delete().eq("id", id);
+    if (error) {
+      console.warn("Supabase products table delete note:", error.message);
+    }
+    return { data, error };
+  } catch (err) {
+    console.warn("Supabase deleteProduct exception:", err);
+    return { error: err };
+  }
+}
