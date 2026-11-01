@@ -174,16 +174,6 @@ CREATE POLICY "Allow public read and write on orders" ON public.orders FOR ALL T
 DROP POLICY IF EXISTS "Allow public read and write on enquiries" ON public.enquiries;
 CREATE POLICY "Allow public read and write on enquiries" ON public.enquiries FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
 `;
-
-DROP POLICY IF EXISTS "Allow public read and write on categories" ON public.categories;
-CREATE POLICY "Allow public read and write on categories" ON public.categories FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow public read and write on orders" ON public.orders;
-CREATE POLICY "Allow public read and write on orders" ON public.orders FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow public read and write on enquiries" ON public.enquiries;
-CREATE POLICY "Allow public read and write on enquiries" ON public.enquiries FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
-`;
     if (navigator?.clipboard) {
       navigator.clipboard.writeText(textToCopy);
       setCopiedSql(true);
