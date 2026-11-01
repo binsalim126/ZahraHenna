@@ -119,15 +119,14 @@ export default function HomePage() {
                 </div>
 
                 {/* Bold 3-Tier Headline - Monumental font size for mobile to fill page */}
-                <h1 className="font-heading text-[46px] min-[380px]:text-[50px] min-[420px]:text-[54px] sm:text-5xl lg:text-6xl font-black text-henna-dark leading-[0.98] sm:leading-[1.08] tracking-tight text-left">
-                  Pure Natural <br />
-                  Henna, <br />
-                  <span className="text-moringa">crafted by <br className="sm:hidden" />nature,</span> <br />
+                <h1 className="font-heading text-[44px] min-[380px]:text-[48px] sm:text-[38px] lg:text-[42px] xl:text-[44px] font-black text-henna-dark leading-[1.0] sm:leading-[1.14] tracking-tight text-left">
+                  Pure Natural <br className="sm:hidden" />Henna, <br />
+                  <span className="text-moringa">crafted by nature,</span> <br />
                   zero chemicals.
                 </h1>
 
                 {/* Subtitle - Increased size for mobile readability and fill */}
-                <p className="text-[17px] min-[380px]:text-[18px] sm:text-xl lg:text-2xl text-henna-dark/90 max-w-xl text-left leading-[1.6] sm:leading-relaxed font-normal">
+                <p className="text-[17px] min-[380px]:text-[18px] sm:text-base lg:text-[17px] text-henna-dark/85 max-w-xl text-left leading-[1.6] sm:leading-relaxed font-normal">
                   We are <strong className="font-bold text-henna-dark">Zahra Henna</strong> — crafting fresh ready cones blended with single-origin Rajasthani henna leaves, organic moringa, and therapeutic oils for rich, dark-brown bridal stains.
                 </p>
               </div>
@@ -137,7 +136,7 @@ export default function HomePage() {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-3 sm:gap-4 w-full">
                   <Link
                     href="/shop"
-                    className="btn-shimmer w-full sm:w-auto px-8 sm:px-9 py-4 sm:py-4.5 rounded-full bg-henna text-white font-extrabold text-sm sm:text-base tracking-wider uppercase shadow-luxury hover:bg-henna-dark flex items-center justify-center gap-2.5 text-center"
+                    className="btn-shimmer w-full sm:w-auto px-8 sm:px-7 py-4 sm:py-3.5 rounded-full bg-henna text-white font-extrabold sm:font-bold text-sm sm:text-xs tracking-wider uppercase shadow-luxury hover:bg-henna-dark flex items-center justify-center gap-2.5 sm:gap-2 text-center"
                   >
                     <span>Shop Cones Now</span>
                     <ArrowRight className="w-4 h-4" />
@@ -145,7 +144,7 @@ export default function HomePage() {
 
                   <Link
                     href="/about"
-                    className="btn-outline-animated w-full sm:w-auto px-8 sm:px-9 py-4 sm:py-4.5 rounded-full bg-white/90 backdrop-blur-sm border border-sand/50 text-henna font-extrabold text-sm sm:text-base tracking-wider uppercase hover:bg-white flex items-center justify-center gap-2.5 shadow-sm text-center"
+                    className="btn-outline-animated w-full sm:w-auto px-8 sm:px-7 py-4 sm:py-3.5 rounded-full bg-white/90 backdrop-blur-sm border border-sand/50 text-henna font-extrabold sm:font-bold text-sm sm:text-xs tracking-wider uppercase hover:bg-white flex items-center justify-center gap-2.5 sm:gap-2 shadow-sm text-center"
                   >
                     Our Story
                   </Link>
