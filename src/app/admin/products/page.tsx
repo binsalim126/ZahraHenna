@@ -90,10 +90,20 @@ export default function AdminProductsPage() {
 
   const handleCopySetupInstructions = () => {
     const textToCopy = `-- ZAHRA HENNA SUPABASE SETUP SCRIPT (Run this in Supabase SQL Editor)
--- File: supabase-setup.sql is located in the project root!
 -- Direct URL: https://supabase.com/dashboard/project/wqgubwlsmtvwnjeuoqtz/sql/new
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS public.categories (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  image TEXT,
+  product_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 
 CREATE TABLE IF NOT EXISTS public.products (
   id TEXT PRIMARY KEY,
@@ -116,16 +126,6 @@ CREATE TABLE IF NOT EXISTS public.products (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS public.categories (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  slug TEXT UNIQUE NOT NULL,
-  description TEXT,
-  image TEXT,
-  product_count INTEGER DEFAULT 0,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
 CREATE TABLE IF NOT EXISTS public.orders (
   id TEXT PRIMARY KEY,
   order_number TEXT UNIQUE NOT NULL,
@@ -142,7 +142,8 @@ CREATE TABLE IF NOT EXISTS public.orders (
   address JSONB DEFAULT '{}'::jsonb,
   items JSONB DEFAULT '[]'::jsonb,
   notes TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS public.enquiries (
@@ -152,7 +153,8 @@ CREATE TABLE IF NOT EXISTS public.enquiries (
   email TEXT,
   message TEXT NOT NULL,
   is_read BOOLEAN DEFAULT false,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
@@ -162,6 +164,16 @@ ALTER TABLE public.enquiries ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Allow public read and write on products" ON public.products;
 CREATE POLICY "Allow public read and write on products" ON public.products FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public read and write on categories" ON public.categories;
+CREATE POLICY "Allow public read and write on categories" ON public.categories FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public read and write on orders" ON public.orders;
+CREATE POLICY "Allow public read and write on orders" ON public.orders FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public read and write on enquiries" ON public.enquiries;
+CREATE POLICY "Allow public read and write on enquiries" ON public.enquiries FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
+`;
 
 DROP POLICY IF EXISTS "Allow public read and write on categories" ON public.categories;
 CREATE POLICY "Allow public read and write on categories" ON public.categories FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
