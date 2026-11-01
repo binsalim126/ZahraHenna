@@ -166,7 +166,7 @@ export default function AdminOrderDetailPage({
               ZAHRA <span className="text-terracotta font-normal">HENNA</span>
             </span>
             <p className="text-[11px] text-henna-600 mt-1">
-              Artisan Studios, Sojat Henna Hub, Rajasthan 306104, India <br />
+              Zahra Henna Studio, Anjumuri, Kuthappady, Thammanam, Ernakulam, Kerala 682032 <br />
               Email: care@zahrahenna.com • GSTIN: 08AAACZ1234A1Z5
             </p>
           </div>

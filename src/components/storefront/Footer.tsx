@@ -149,10 +149,16 @@ export const Footer: React.FC = () => {
                 <Mail className="w-4 h-4 text-sand" />
                 <span>{BRAND_CONFIG.email}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-sand" />
+              <a
+                href={BRAND_CONFIG.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-2 text-cream/80 hover:text-sand transition-colors group"
+                title="View Zahra Henna on Google Maps"
+              >
+                <MapPin className="w-4 h-4 text-sand flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                 <span>{BRAND_CONFIG.location}</span>
-              </div>
+              </a>
             </div>
           </div>
         </div>

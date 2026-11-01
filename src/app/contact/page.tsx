@@ -135,22 +135,27 @@ Message: ${formData.message || "I have an enquiry about your natural henna cones
           </div>
 
           {/* Location Card */}
-          <div className="bg-white p-6 rounded-3xl border border-sand/20 shadow-sm space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-henna-dark text-white flex items-center justify-center shadow-sm">
+          <a
+            href={BRAND_CONFIG.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white p-6 rounded-3xl border border-sand/20 shadow-sm hover:shadow-md transition-all space-y-3 group block text-left"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-henna-dark text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
               <MapPin className="w-6 h-6" />
             </div>
             <div>
               <span className="text-[10px] uppercase font-bold text-moringa tracking-wider block">
-                Workshop & Studio
+                Studio & Store Location ↗
               </span>
               <h3 className="font-heading font-bold text-base text-henna-dark">
-                Studio Hub
+                Zahra Henna
               </h3>
-              <p className="text-xs text-henna-dark/70 mt-1">
+              <p className="text-xs text-henna-dark/70 mt-1 leading-relaxed">
                 {BRAND_CONFIG.location}
               </p>
             </div>
-          </div>
+          </a>
         </div>
 
         {/* Enquiry Form + Social Links & Map Section */}
@@ -315,21 +320,36 @@ Message: ${formData.message || "I have an enquiry about your natural henna cones
               </div>
             </div>
 
-            {/* Embedded Google Map Placeholder */}
-            <div className="bg-white p-6 rounded-3xl border border-sand/20 shadow-sm space-y-3">
-              <h3 className="font-heading font-bold text-lg text-henna">
-                Our Workshop Location
-              </h3>
-              <div className="relative aspect-video rounded-2xl overflow-hidden bg-cream border border-sand/20 flex items-center justify-center text-center p-4">
-                <div className="space-y-1">
-                  <MapPin className="w-8 h-8 text-henna mx-auto animate-bounce" />
-                  <p className="font-heading font-bold text-sm text-henna-dark">
-                    Zahra Henna Artisanal Studio
-                  </p>
-                  <p className="text-[11px] text-henna-dark/70">
-                    Sojat Henna Belt, Pali District, Rajasthan 306104
+            {/* Embedded Google Map */}
+            <div className="bg-white p-6 rounded-3xl border border-sand/20 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
+                <div>
+                  <h3 className="font-heading font-bold text-lg text-henna">
+                    Studio & Store Location
+                  </h3>
+                  <p className="text-xs text-henna-dark/70 mt-0.5">
+                    {BRAND_CONFIG.location}
                   </p>
                 </div>
+                <a
+                  href={BRAND_CONFIG.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-full bg-henna text-white text-xs font-bold uppercase tracking-wider hover:bg-henna-dark shadow-luxury inline-flex items-center gap-1.5 flex-shrink-0 w-fit"
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Open in Google Maps ↗</span>
+                </a>
+              </div>
+
+              <div className="relative aspect-[16/10] sm:aspect-video rounded-2xl overflow-hidden bg-cream border border-sand/25 shadow-inner">
+                <iframe
+                  title="Zahra Henna Location on Google Maps"
+                  src="https://maps.google.com/maps?q=Zahra+Henna,+Anjumuri,+Kuthappady,+Thammanam,+Ernakulam,+Kerala+682032&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  className="w-full h-full border-0"
+                  loading="lazy"
+                  allowFullScreen
+                />
               </div>
             </div>
           </div>
