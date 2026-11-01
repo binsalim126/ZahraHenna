@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Package,
@@ -11,14 +11,35 @@ import {
   Clock,
   Eye,
   CheckCircle,
+  Database,
+  AlertTriangle,
 } from "lucide-react";
 import { Store } from "@/lib/data/store";
 import { formatPrice, formatDate } from "@/lib/utils";
+import { SupabaseHealth } from "@/lib/supabase";
 
 export default function AdminOverviewPage() {
-  const products = Store.getAllProductsAdmin();
-  const orders = Store.getOrders();
-  const enquiries = Store.getEnquiries();
+  const [products, setProducts] = useState(Store.getAllProductsAdmin());
+  const [orders, setOrders] = useState(Store.getOrders());
+  const [enquiries, setEnquiries] = useState(Store.getEnquiries());
+  const [health, setHealth] = useState<SupabaseHealth | null>(null);
+
+  useEffect(() => {
+    setProducts(Store.getAllProductsAdmin());
+    setOrders(Store.getOrders());
+    setEnquiries(Store.getEnquiries());
+
+    Store.checkHealth().then((h) => setHealth(h)).catch(() => {});
+
+    const handleChange = () => {
+      setProducts([...Store.getAllProductsAdmin()]);
+      setOrders([...Store.getOrders()]);
+      setEnquiries([...Store.getEnquiries()]);
+    };
+
+    window.addEventListener("zh-products-changed", handleChange);
+    return () => window.removeEventListener("zh-products-changed", handleChange);
+  }, []);
 
   const totalRevenue = orders.reduce((acc, o) => acc + o.totalAmount, 0);
   const unreadEnquiries = enquiries.filter((e) => !e.isRead);
@@ -28,9 +49,22 @@ export default function AdminOverviewPage() {
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-bold text-henna">
-            Zahra Henna Overview
-          </h1>
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-heading text-2xl sm:text-3xl font-bold text-henna">
+              Zahra Henna Overview
+            </h1>
+            {health?.tableReady ? (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Supabase Live</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-200">
+                <span className="w-2 h-2 rounded-full bg-amber-500" />
+                <span>Supabase Setup Needed</span>
+              </span>
+            )}
+          </div>
           <p className="text-xs text-henna-dark/70 mt-1">
             Real-time control center for natural henna cones, WhatsApp enquiries, and distributor orders.
           </p>
@@ -52,6 +86,24 @@ export default function AdminOverviewPage() {
           </Link>
         </div>
       </div>
+
+      {/* Database Warning if tables are missing */}
+      {health && !health.tableReady && (
+        <div className="bg-amber-50 border border-amber-300 rounded-3xl p-4 flex items-center justify-between gap-4 text-xs">
+          <div className="flex items-center gap-3 text-amber-900 font-medium">
+            <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+            <span>
+              Cloud database tables need initialization for changes on Device A to appear on Device B.
+            </span>
+          </div>
+          <Link
+            href="/admin/products"
+            className="px-3.5 py-1.5 rounded-xl bg-amber-600 text-white font-bold whitespace-nowrap hover:bg-amber-700 transition-colors shadow-xs"
+          >
+            Run Setup Script →
+          </Link>
+        </div>
+      )}
 
       {/* KPI Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -99,108 +151,71 @@ export default function AdminOverviewPage() {
           <div className="font-heading text-3xl font-bold text-henna">
             {enquiries.length} Messages
           </div>
-          <div className="text-xs text-moringa font-semibold">
+          <div className="text-xs text-henna-dark/60 font-medium">
             {unreadEnquiries.length} unread messages awaiting reply
           </div>
         </div>
       </div>
 
-      {/* Two-Column Section: Recent WhatsApp Orders & Recent Messages */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Recent WhatsApp Orders */}
-        <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-sand/20 shadow-sm space-y-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="font-heading font-bold text-lg text-henna">
-                Recent WhatsApp Orders
-              </h2>
-              <p className="text-xs text-henna-dark/60">Live orders received from customers</p>
-            </div>
-            <Link
-              href="/admin/orders"
-              className="text-xs font-bold text-moringa hover:underline"
-            >
-              View All →
-            </Link>
+      {/* Recent WhatsApp Orders Section */}
+      <div className="bg-white rounded-3xl border border-sand/20 shadow-sm p-6 sm:p-8 space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="font-heading text-lg sm:text-xl font-bold text-henna">
+              Recent WhatsApp Orders
+            </h2>
+            <p className="text-xs text-henna-dark/60">
+              Live orders received from customers
+            </p>
           </div>
+          <Link
+            href="/admin/orders"
+            className="text-xs font-bold text-henna hover:text-henna-dark flex items-center gap-1"
+          >
+            <span>View All</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
 
-          <div className="space-y-3">
-            {orders.slice(0, 4).map((order) => (
-              <div
-                key={order.id}
-                className="p-4 rounded-2xl bg-cream border border-sand/20 flex items-center justify-between gap-4 text-xs"
-              >
-                <div>
-                  <span className="font-mono font-bold text-henna block">
+        <div className="divide-y divide-sand/15">
+          {orders.slice(0, 3).map((order) => (
+            <div
+              key={order.id}
+              className="py-4 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+            >
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs font-bold text-henna">
                     {order.orderNumber}
                   </span>
-                  <span className="font-bold text-henna-dark block mt-0.5">
-                    {order.customerName} ({order.customerPhone})
-                  </span>
-                  <span className="text-[11px] text-henna-dark/60">
-                    {order.items.length} items • {formatDate(order.createdAt)}
-                  </span>
-                </div>
-
-                <div className="text-right space-y-1">
-                  <span className="font-heading font-bold text-sm text-henna block">
-                    {formatPrice(order.totalAmount)}
-                  </span>
-                  <span
-                    className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
-                      order.status === "DELIVERED"
-                        ? "bg-moringa/15 text-moringa"
-                        : "bg-sand/20 text-henna"
-                    }`}
-                  >
+                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-moringa/15 text-moringa">
                     {order.status}
                   </span>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Recent Contact Messages */}
-        <div className="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl border border-sand/20 shadow-sm space-y-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="font-heading font-bold text-lg text-henna">
-                Recent Enquiries
-              </h2>
-              <p className="text-xs text-henna-dark/60">From contact form</p>
-            </div>
-            <Link
-              href="/admin/enquiries"
-              className="text-xs font-bold text-moringa hover:underline"
-            >
-              View All →
-            </Link>
-          </div>
-
-          <div className="space-y-3">
-            {enquiries.slice(0, 3).map((enq) => (
-              <div
-                key={enq.id}
-                className="p-4 rounded-2xl bg-cream border border-sand/20 space-y-1.5 text-xs"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-henna">{enq.name}</span>
-                  {!enq.isRead && (
-                    <span className="text-[9px] uppercase font-bold text-moringa bg-moringa/15 px-1.5 py-0.5 rounded">
-                      New
-                    </span>
-                  )}
+                <div className="text-xs text-henna-dark font-medium">
+                  {order.customerName} ({order.customerPhone})
                 </div>
-                <p className="text-henna-dark/80 line-clamp-2 leading-relaxed">
-                  "{enq.message}"
-                </p>
-                <span className="text-[10px] text-henna-dark/50 block font-mono">
-                  {enq.phone}
-                </span>
+                <div className="text-[11px] text-henna-dark/60 flex items-center gap-2">
+                  <span>{order.items.length} items</span>
+                  <span>•</span>
+                  <span>{formatDate(order.createdAt)}</span>
+                </div>
               </div>
-            ))}
-          </div>
+
+              <div className="flex items-center justify-between sm:justify-end gap-4">
+                <span className="font-heading font-bold text-sm text-henna">
+                  {formatPrice(order.totalAmount)}
+                </span>
+                <Link
+                  href={`/admin/orders/${order.id}`}
+                  className="px-3 py-1.5 rounded-xl border border-sand/30 hover:bg-cream text-xs font-semibold text-henna-dark flex items-center gap-1"
+                >
+                  <Eye className="w-3 h-3" />
+                  <span>Inspect</span>
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

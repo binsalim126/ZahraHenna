@@ -30,6 +30,7 @@ export default function AdminEditProductPage({
   const [isVisible, setIsVisible] = useState(true);
   const [imageUrl, setImageUrl] = useState("");
   const [variants, setVariants] = useState<ProductVariant[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const cats = Store.getCategories();
@@ -120,36 +121,44 @@ export default function AdminEditProductPage({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!product || isSubmitting) return;
+
+    setIsSubmitting(true);
     const selectedCategory = categories.find((c) => c.id === categoryId);
 
-    Store.saveProduct({
-      ...product,
-      title,
-      slug,
-      categoryId,
-      categoryName: selectedCategory?.name || product.categoryName,
-      shortDesc,
-      description,
-      ingredients,
-      benefits,
-      howToUse,
-      isFeatured,
-      isVisible,
-      images: [
-        {
-          id: product.images[0]?.id || `img-${Date.now()}`,
-          url: imageUrl,
-          altText: title,
-          isPrimary: true,
-          order: 1,
-        },
-      ],
-      variants,
-    });
+    try {
+      await Store.saveProduct({
+        ...product,
+        title,
+        slug,
+        categoryId,
+        categoryName: selectedCategory?.name || product.categoryName,
+        shortDesc,
+        description,
+        ingredients,
+        benefits,
+        howToUse,
+        isFeatured,
+        isVisible,
+        images: [
+          {
+            id: product.images[0]?.id || `img-${Date.now()}`,
+            url: imageUrl,
+            altText: title,
+            isPrimary: true,
+            order: 1,
+          },
+        ],
+        variants,
+      });
 
-    router.push("/admin/products");
+      router.push("/admin/products");
+    } catch (err) {
+      console.error("Save error:", err);
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -467,10 +476,11 @@ export default function AdminEditProductPage({
             </Link>
             <button
               type="submit"
-              className="btn-shimmer w-full sm:w-auto px-7 py-3 rounded-2xl bg-henna text-white text-xs font-bold uppercase tracking-wider hover:bg-henna-dark shadow-luxury flex items-center justify-center gap-2"
+              disabled={isSubmitting}
+              className="btn-shimmer w-full sm:w-auto px-7 py-3 rounded-2xl bg-henna text-white text-xs font-bold uppercase tracking-wider hover:bg-henna-dark shadow-luxury flex items-center justify-center gap-2 disabled:opacity-60"
             >
-              <Save className="w-4 h-4" />
-              <span>Save Formulation</span>
+              <Save className={`w-4 h-4 ${isSubmitting ? "animate-spin" : ""}`} />
+              <span>{isSubmitting ? "Saving to Cloud..." : "Save Formulation"}</span>
             </button>
           </div>
         </div>

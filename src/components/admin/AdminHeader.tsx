@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { LogOut, Database } from "lucide-react";
+import { Store } from "@/lib/data/store";
+import { SupabaseHealth } from "@/lib/supabase";
 
 interface AdminHeaderProps {
   onToggleSidebar?: () => void;
@@ -11,6 +13,11 @@ interface AdminHeaderProps {
 
 export const AdminHeader: React.FC<AdminHeaderProps> = () => {
   const router = useRouter();
+  const [health, setHealth] = useState<SupabaseHealth | null>(null);
+
+  useEffect(() => {
+    Store.checkHealth().then((h) => setHealth(h)).catch(() => {});
+  }, []);
 
   const handleLogout = () => {
     try {
@@ -33,6 +40,21 @@ export const AdminHeader: React.FC<AdminHeaderProps> = () => {
         <span className="text-[10px] text-henna-dark/60 font-semibold bg-cream px-2 py-0.5 rounded-full border border-sand/20 hidden sm:inline-block">
           Zahra Henna Store
         </span>
+
+        {health && (
+          <Link
+            href="/admin/products"
+            className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider ${
+              health.tableReady
+                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                : "bg-amber-50 text-amber-800 border border-amber-200"
+            }`}
+            title={health.message}
+          >
+            <Database className="w-3 h-3" />
+            <span>{health.tableReady ? "Cloud Sync: Live" : "Cloud: Setup Needed"}</span>
+          </Link>
+        )}
       </div>
 
       {/* User Avatar + Quick Live Link + Logout */}

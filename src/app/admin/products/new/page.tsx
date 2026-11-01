@@ -22,6 +22,7 @@ export default function AdminNewProductPage() {
   const [howToUse, setHowToUse] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Images state
   const [imageUrl, setImageUrl] = useState(
@@ -95,41 +96,47 @@ export default function AdminNewProductPage() {
     setVariants(updated);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !slug) return;
+    if (!title || !slug || isSubmitting) return;
 
+    setIsSubmitting(true);
     const selectedCategory = categories.find((c) => c.id === categoryId);
 
-    Store.saveProduct({
-      id: `prod-${Date.now()}`,
-      title,
-      slug,
-      shortDesc,
-      description,
-      ingredients,
-      benefits,
-      howToUse,
-      isFeatured,
-      isVisible,
-      categoryId,
-      categoryName: selectedCategory?.name || "Natural Henna",
-      createdAt: new Date().toISOString(),
-      rating: 5.0,
-      reviewCount: 0,
-      images: [
-        {
-          id: `img-${Date.now()}`,
-          url: imageUrl,
-          altText: title,
-          isPrimary: true,
-          order: 1,
-        },
-      ],
-      variants,
-    });
+    try {
+      await Store.saveProduct({
+        id: `prod-${Date.now()}`,
+        title,
+        slug,
+        shortDesc,
+        description,
+        ingredients,
+        benefits,
+        howToUse,
+        isFeatured,
+        isVisible,
+        categoryId,
+        categoryName: selectedCategory?.name || "Natural Henna",
+        createdAt: new Date().toISOString(),
+        rating: 5.0,
+        reviewCount: 0,
+        images: [
+          {
+            id: `img-${Date.now()}`,
+            url: imageUrl,
+            altText: title,
+            isPrimary: true,
+            order: 1,
+          },
+        ],
+        variants,
+      });
 
-    router.push("/admin/products");
+      router.push("/admin/products");
+    } catch (err) {
+      console.error("Save error:", err);
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -477,10 +484,13 @@ export default function AdminNewProductPage() {
           </Link>
           <button
             type="submit"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-henna hover:bg-henna-dark text-white text-xs font-bold uppercase tracking-wider shadow-luxury transition-all active:scale-98"
+            disabled={isSubmitting}
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-henna hover:bg-henna-dark text-white text-xs font-bold uppercase tracking-wider shadow-luxury transition-all active:scale-98 disabled:opacity-60"
           >
-            <Save className="w-4 h-4 text-white" />
-            <span className="text-white">Publish Formulation</span>
+            <Save className={`w-4 h-4 text-white ${isSubmitting ? "animate-spin" : ""}`} />
+            <span className="text-white">
+              {isSubmitting ? "Syncing with Cloud..." : "Publish Formulation"}
+            </span>
           </button>
         </div>
       </form>

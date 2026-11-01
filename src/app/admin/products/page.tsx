@@ -13,19 +13,42 @@ import {
   Sparkles,
   RotateCcw,
   CheckCircle,
+  Database,
+  RefreshCw,
+  AlertTriangle,
+  Copy,
+  Check,
+  ExternalLink,
 } from "lucide-react";
 import { Store } from "@/lib/data/store";
 import { formatPrice } from "@/lib/utils";
+import { SupabaseHealth } from "@/lib/supabase";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState(Store.getAllProductsAdmin());
   const [search, setSearch] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [health, setHealth] = useState<SupabaseHealth | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [copiedSql, setCopiedSql] = useState(false);
+
+  const checkStatus = async () => {
+    try {
+      const h = await Store.checkHealth();
+      setHealth(h);
+    } catch {
+      // Ignore
+    }
+  };
 
   useEffect(() => {
-    // Hydrate persistent state from localStorage
+    // 1. Initial local load
     setProducts(Store.getAllProductsAdmin());
 
+    // 2. Check Supabase connection & schema status
+    checkStatus();
+
+    // 3. Listen for store changes (both local edits and cloud updates)
     const handleProductsChange = () => {
       setProducts([...Store.getAllProductsAdmin()]);
     };
@@ -36,7 +59,7 @@ export default function AdminProductsPage() {
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
+    setTimeout(() => setToastMessage(null), 3500);
   };
 
   const filtered = products.filter(
@@ -45,39 +68,163 @@ export default function AdminProductsPage() {
       p.categoryName?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleToggleVisibility = (id: string) => {
+  const handleSyncCloud = async () => {
+    setIsSyncing(true);
+    try {
+      const res = await Store.refreshFromCloud();
+      setProducts([...Store.getAllProductsAdmin()]);
+      await checkStatus();
+      if (res.source === "supabase") {
+        showToast("Live products synced from Supabase cloud database");
+      } else if (res.error) {
+        showToast(`Cloud note: ${res.error.message || "Database table pending"}`);
+      } else {
+        showToast("Local catalog updated");
+      }
+    } catch (err: any) {
+      showToast(`Sync error: ${err?.message || err}`);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  const handleCopySetupInstructions = () => {
+    const textToCopy = `-- ZAHRA HENNA SUPABASE SETUP SCRIPT (Run this in Supabase SQL Editor)
+-- File: supabase-setup.sql is located in the project root!
+-- Direct URL: https://supabase.com/dashboard/project/wqgubwlsmtvwnjeuoqtz/sql/new
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS public.products (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  short_desc TEXT,
+  description TEXT,
+  ingredients TEXT,
+  benefits TEXT,
+  how_to_use TEXT,
+  category_id TEXT,
+  category_name TEXT,
+  is_featured BOOLEAN DEFAULT false,
+  is_visible BOOLEAN DEFAULT true,
+  variants JSONB DEFAULT '[]'::jsonb,
+  images JSONB DEFAULT '[]'::jsonb,
+  rating NUMERIC DEFAULT 5.0,
+  review_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.categories (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  image TEXT,
+  product_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.orders (
+  id TEXT PRIMARY KEY,
+  order_number TEXT UNIQUE NOT NULL,
+  customer_name TEXT NOT NULL,
+  customer_phone TEXT NOT NULL,
+  customer_email TEXT,
+  total_amount NUMERIC NOT NULL DEFAULT 0,
+  subtotal NUMERIC DEFAULT 0,
+  shipping_cost NUMERIC DEFAULT 0,
+  discount_amount NUMERIC DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'CONFIRMED',
+  payment_method TEXT DEFAULT 'CASH_ON_DELIVERY',
+  payment_status TEXT DEFAULT 'PENDING',
+  address JSONB DEFAULT '{}'::jsonb,
+  items JSONB DEFAULT '[]'::jsonb,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.enquiries (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  email TEXT,
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.enquiries ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read and write on products" ON public.products;
+CREATE POLICY "Allow public read and write on products" ON public.products FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public read and write on categories" ON public.categories;
+CREATE POLICY "Allow public read and write on categories" ON public.categories FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public read and write on orders" ON public.orders;
+CREATE POLICY "Allow public read and write on orders" ON public.orders FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public read and write on enquiries" ON public.enquiries;
+CREATE POLICY "Allow public read and write on enquiries" ON public.enquiries FOR ALL TO public, anon, authenticated USING (true) WITH CHECK (true);
+`;
+    if (navigator?.clipboard) {
+      navigator.clipboard.writeText(textToCopy);
+      setCopiedSql(true);
+      showToast("Setup SQL copied to clipboard! Paste in Supabase SQL editor.");
+      setTimeout(() => setCopiedSql(false), 3000);
+    }
+  };
+
+  const handleToggleVisibility = async (id: string) => {
     const p = Store.getProductById(id);
     if (p) {
       p.isVisible = !p.isVisible;
-      Store.saveProduct({ ...p });
+      await Store.saveProduct({ ...p });
       setProducts([...Store.getAllProductsAdmin()]);
       showToast(p.isVisible ? "Product is now Live" : "Product hidden from store");
     }
   };
 
-  const handleToggleFeatured = (id: string) => {
+  const handleToggleFeatured = async (id: string) => {
     const p = Store.getProductById(id);
     if (p) {
       p.isFeatured = !p.isFeatured;
-      Store.saveProduct({ ...p });
+      await Store.saveProduct({ ...p });
       setProducts([...Store.getAllProductsAdmin()]);
       showToast(p.isFeatured ? "Marked as Featured" : "Removed from Featured");
     }
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this product?")) {
-      Store.deleteProduct(id);
+  const handleDelete = async (id: string) => {
+    if (
+      confirm(
+        "Are you sure you want to delete this product? It will be permanently removed across all devices and Supabase."
+      )
+    ) {
+      const res = await Store.deleteProduct(id);
       setProducts([...Store.getAllProductsAdmin()]);
-      showToast("Product permanently deleted from store & database");
+      if (res.error) {
+        showToast("Deleted locally. Note: Supabase database table pending setup.");
+      } else {
+        showToast("Product permanently deleted across all devices & Supabase");
+      }
     }
   };
 
-  const handleResetDefaults = () => {
-    if (confirm("Restore original catalog formulations? This will reload the 6 standard products.")) {
-      const restored = Store.resetProductsToDefault();
+  const handleResetDefaults = async () => {
+    if (
+      confirm(
+        "Restore original catalog formulations? This will reload the 6 standard products to both devices and Supabase."
+      )
+    ) {
+      const restored = await Store.resetProductsToDefault();
       setProducts([...restored]);
-      showToast("Default formulations restored");
+      showToast("Default formulations restored and synced to Supabase");
     }
   };
 
@@ -86,23 +233,108 @@ export default function AdminProductsPage() {
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-henna text-white px-4 py-3 rounded-2xl shadow-luxury flex items-center gap-2 text-xs font-semibold animate-fadeIn border border-sand/30">
-          <CheckCircle className="w-4 h-4 text-leaf" />
+          <CheckCircle className="w-4 h-4 text-leaf flex-shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* Top Bar */}
+      {/* Cloud Sync Status Banner (if tables need setup in Supabase) */}
+      {health && !health.tableReady && (
+        <div className="bg-amber-50/90 border border-amber-300 rounded-3xl p-4 sm:p-5 shadow-sm space-y-3">
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-2xl bg-amber-500/15 text-amber-700 flex items-center justify-center flex-shrink-0">
+              <AlertTriangle className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="flex-1 text-left">
+              <h3 className="font-heading font-bold text-sm text-amber-900">
+                Action Required: Supabase Cloud Database Tables Need To Be Initialized
+              </h3>
+              <p className="text-xs text-amber-800/90 mt-1 leading-relaxed">
+                Supabase project <strong>wqgubwlsmtvwnjeuoqtz</strong> is connected, but the{" "}
+                <code className="bg-amber-100 text-amber-900 px-1 py-0.5 rounded font-mono text-[11px]">
+                  public.products
+                </code>{" "}
+                table has not been created yet in SQL editor. Edits and deletions on Device A
+                cannot sync to Device B until you run the setup script.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5 pt-1 sm:pl-12">
+            <button
+              onClick={handleCopySetupInstructions}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-sm transition-all active:scale-98"
+            >
+              {copiedSql ? (
+                <>
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Setup SQL Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>1-Click Copy Setup SQL</span>
+                </>
+              )}
+            </button>
+
+            <a
+              href="https://supabase.com/dashboard/project/wqgubwlsmtvwnjeuoqtz/sql/new"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-amber-300 text-amber-900 hover:bg-amber-100/50 text-xs font-bold transition-all shadow-xs"
+            >
+              <span>Open Supabase SQL Editor</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+
+            <button
+              onClick={handleSyncCloud}
+              disabled={isSyncing}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-100 text-amber-900 hover:bg-amber-200 text-xs font-semibold transition-all disabled:opacity-60"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? "animate-spin" : ""}`} />
+              <span>{isSyncing ? "Verifying..." : "Verify Connection"}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Top Bar with Cloud Sync status */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-bold text-henna">
-            Product Inventory
-          </h1>
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-heading text-2xl sm:text-3xl font-bold text-henna">
+              Product Inventory
+            </h1>
+            {health?.tableReady ? (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Cloud Sync Active</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-200">
+                <span className="w-2 h-2 rounded-full bg-amber-500" />
+                <span>Cloud Setup Pending</span>
+              </span>
+            )}
+          </div>
           <p className="text-xs text-henna-dark/70 mt-0.5">
-            Manage your artisanal henna formulations, weights, and pricing.
+            Manage your artisanal henna formulations, weights, and cross-device persistence.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+          <button
+            onClick={handleSyncCloud}
+            disabled={isSyncing}
+            className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-2xl border border-henna-200 bg-white text-henna-700 hover:bg-henna-50 text-xs font-semibold shadow-sm transition-all disabled:opacity-60"
+            title="Force refresh live products from Supabase cloud database"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? "animate-spin" : ""}`} />
+            <span>{isSyncing ? "Syncing..." : "Sync Cloud"}</span>
+          </button>
+
           <button
             onClick={handleResetDefaults}
             className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-2xl border border-henna-200 bg-white text-henna-700 hover:bg-henna-50 text-xs font-semibold shadow-sm transition-all"
@@ -153,7 +385,7 @@ export default function AdminProductsPage() {
           return (
             <div
               key={product.id}
-              className="bg-white p-3.5 rounded-2xl border border-henna-200/80 shadow-sm space-y-3"
+              className="bg-white p-3.5 rounded-2xl border border-henna-200/80 shadow-sm space-y-3 text-left"
             >
               <div className="flex items-center gap-3">
                 <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-henna-50 flex-shrink-0 border border-henna-200">
@@ -302,7 +534,10 @@ export default function AdminProductsPage() {
                             {product.title}
                           </h2>
                           <span className="text-henna-dark/60 text-[11px] block mt-0.5">
-                            Total Stock: <strong className="font-bold text-henna">{totalStock} units</strong>
+                            Total Stock:{" "}
+                            <strong className="font-bold text-henna">
+                              {totalStock} units
+                            </strong>
                           </span>
                         </div>
                       </div>

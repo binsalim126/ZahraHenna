@@ -19,6 +19,9 @@ import {
   syncEnquiryToSupabase,
   syncProductToSupabase,
   deleteProductFromSupabase,
+  fetchProductsFromSupabase,
+  subscribeToProductChanges,
+  checkSupabaseHealth,
 } from "@/lib/supabase";
 
 export interface Enquiry {
@@ -346,7 +349,88 @@ let siteSettings = isBrowser
       tiktok: BRAND_CONFIG.socialLinks.tiktok,
     };
 
+// Cloud Sync State
+let isCloudSyncInitialized = false;
+let cloudSyncUnsubscribe: (() => void) | null = null;
+
 export const Store = {
+  /**
+   * Initialize cross-device cloud synchronization with Supabase.
+   * Auto-hydrates products from Supabase on any device and subscribes to realtime changes.
+   */
+  initCloudSync: async () => {
+    if (!isBrowser || isCloudSyncInitialized) return;
+    isCloudSyncInitialized = true;
+
+    // 1. Initial hydration from Supabase
+    await Store.refreshFromCloud();
+
+    // 2. Subscribe to realtime updates across devices
+    if (!cloudSyncUnsubscribe) {
+      cloudSyncUnsubscribe = subscribeToProductChanges(async () => {
+        await Store.refreshFromCloud();
+      });
+    }
+  },
+
+  /**
+   * Explicitly fetch live products from Supabase and synchronize in-memory & local cache.
+   */
+  refreshFromCloud: async (): Promise<{
+    products: Product[];
+    source: "supabase" | "local";
+    error?: any;
+  }> => {
+    try {
+      const { data, error } = await fetchProductsFromSupabase();
+
+      if (error) {
+        // Table not found or network issue; keep local cache
+        return {
+          products,
+          source: "local",
+          error,
+        };
+      }
+
+      if (Array.isArray(data)) {
+        if (data.length > 0) {
+          // Live Supabase products exist: adopt as source of truth
+          products = data;
+          writeStorage(STORAGE_KEYS.PRODUCTS, products);
+          notifyStoreChange("zh-products-changed");
+          return { products, source: "supabase" };
+        } else if (data.length === 0) {
+          // If table exists but is completely empty, optionally seed with initial products
+          const current = readStorage<Product[]>(STORAGE_KEYS.PRODUCTS, [...INITIAL_PRODUCTS]);
+          if (current.length > 0) {
+            // Seed Supabase with current products
+            for (const p of current) {
+              await syncProductToSupabase(p);
+            }
+            const seeded = await fetchProductsFromSupabase();
+            if (seeded.data && seeded.data.length > 0) {
+              products = seeded.data;
+              writeStorage(STORAGE_KEYS.PRODUCTS, products);
+              notifyStoreChange("zh-products-changed");
+              return { products, source: "supabase" };
+            }
+          }
+        }
+      }
+
+      return { products, source: "local" };
+    } catch (err) {
+      console.warn("Store.refreshFromCloud error:", err);
+      return { products, source: "local", error: err };
+    }
+  },
+
+  // Check Supabase health
+  checkHealth: async () => {
+    return await checkSupabaseHealth();
+  },
+
   // Products (Fully Persistent with localStorage & Supabase Sync)
   getProducts: () => {
     if (isBrowser) {
@@ -372,7 +456,13 @@ export const Store = {
     }
     return products.find((p) => p.id === id);
   },
-  saveProduct: (product: Product) => {
+
+  /**
+   * Save / Upsert a product:
+   * 1. Updates memory and localStorage immediately for zero-lag UI
+   * 2. Persists to Supabase PostgreSQL table
+   */
+  saveProduct: async (product: Product) => {
     if (isBrowser) {
       products = readStorage<Product[]>(STORAGE_KEYS.PRODUCTS, products);
     }
@@ -384,25 +474,39 @@ export const Store = {
     }
     writeStorage(STORAGE_KEYS.PRODUCTS, products);
     notifyStoreChange("zh-products-changed");
-    // Async background sync to Supabase
-    syncProductToSupabase(product).catch(() => {});
-    return product;
+
+    // Persist to Supabase
+    const cloudRes = await syncProductToSupabase(product);
+    return { product, cloudData: cloudRes.data, error: cloudRes.error };
   },
-  deleteProduct: (id: string) => {
+
+  /**
+   * Delete a product:
+   * 1. Removes from memory and localStorage immediately
+   * 2. Removes from Supabase PostgreSQL table
+   */
+  deleteProduct: async (id: string) => {
     if (isBrowser) {
       products = readStorage<Product[]>(STORAGE_KEYS.PRODUCTS, products);
     }
     products = products.filter((p) => p.id !== id);
     writeStorage(STORAGE_KEYS.PRODUCTS, products);
     notifyStoreChange("zh-products-changed");
-    // Async background delete from Supabase
-    deleteProductFromSupabase(id).catch(() => {});
-    return true;
+
+    // Remove from Supabase
+    const cloudRes = await deleteProductFromSupabase(id);
+    return { success: true, cloudData: cloudRes.data, error: cloudRes.error };
   },
-  resetProductsToDefault: () => {
+
+  resetProductsToDefault: async () => {
     products = [...INITIAL_PRODUCTS];
     writeStorage(STORAGE_KEYS.PRODUCTS, products);
     notifyStoreChange("zh-products-changed");
+
+    // Sync all default products to Supabase
+    for (const p of INITIAL_PRODUCTS) {
+      await syncProductToSupabase(p);
+    }
     return products;
   },
 
@@ -462,6 +566,7 @@ export const Store = {
       if (trackingNumber !== undefined) o.trackingNumber = trackingNumber;
       if (carrier !== undefined) o.shippingCarrier = carrier;
       writeStorage(STORAGE_KEYS.ORDERS, orders);
+      syncOrderToSupabase(o).catch(() => {});
     }
     return o;
   },
@@ -555,3 +660,10 @@ export const Store = {
   getTestimonials: () => INITIAL_TESTIMONIALS,
   getFaqs: () => INITIAL_FAQS,
 };
+
+// Automatically initiate cloud sync in browser environments on load
+if (isBrowser) {
+  setTimeout(() => {
+    Store.initCloudSync();
+  }, 100);
+}
