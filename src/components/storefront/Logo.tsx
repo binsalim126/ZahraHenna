@@ -1,49 +1,45 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface LogoProps {
   variant?: "dark" | "light";
   size?: "sm" | "md" | "lg";
   iconOnly?: boolean;
+  className?: string;
+  href?: string;
 }
 
 export const LogoEmblem: React.FC<{
   isLight?: boolean;
   className?: string;
-}> = ({ isLight = false, className = "w-7 h-7" }) => (
-  <svg
-    viewBox="0 0 40 40"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={`${className} transition-transform duration-300 group-hover:scale-105`}
-  >
-    {/* Moringa Leaf contour */}
-    <path
-      d="M20 4C13 12 7 20 10 30C12 36.5 20 37 20 37C20 37 28 36.5 30 30C33 20 27 12 20 4Z"
-      fill={isLight ? "#A9C47F" : "#5E8C31"}
-      fillOpacity={isLight ? "0.3" : "0.2"}
-      stroke={isLight ? "#FAF3E8" : "#5E8C31"}
-      strokeWidth="2"
-    />
-    {/* Natural Henna-Drop center in Henna Brown */}
-    <path
-      d="M20 14C17.5 19 16 23 17.5 26.5C18.5 28.5 21.5 28.5 22.5 26.5C24 23 22.5 19 20 14Z"
-      fill={isLight ? "#C98A4B" : "#5A2E1A"}
-    />
-    {/* Soft vein */}
-    <path
-      d="M20 8V33"
-      stroke={isLight ? "#FAF3E8" : "#A9C47F"}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-  </svg>
-);
+}> = ({ isLight = false, className = "w-8 h-8" }) => {
+  const logoSrc = isLight
+    ? "/assets/images/zahra-henna-logo-light.png"
+    : "/assets/images/zahra-henna-logo-transparent.png";
+
+  return (
+    <div
+      className={`relative flex-shrink-0 aspect-square transition-transform duration-300 group-hover:scale-105 ${className}`}
+    >
+      <Image
+        src={logoSrc}
+        alt="Zahra Henna Logo"
+        fill
+        sizes="(max-width: 768px) 48px, 64px"
+        className="object-contain"
+        priority
+      />
+    </div>
+  );
+};
 
 export const Logo: React.FC<LogoProps> = ({
   variant = "dark",
   size = "md",
   iconOnly = false,
+  className = "",
+  href = "/",
 }) => {
   const isLight = variant === "light";
 
@@ -54,13 +50,13 @@ export const Logo: React.FC<LogoProps> = ({
   };
 
   const iconSizes = {
-    sm: "w-5 h-5",
-    md: "w-7 h-7",
-    lg: "w-8 h-8",
+    sm: "w-8 h-8",
+    md: "w-10 h-10",
+    lg: "w-14 h-14",
   };
 
-  return (
-    <Link href="/" className="inline-flex items-center gap-2 group tracking-tight">
+  const content = (
+    <div className={`inline-flex items-center gap-2.5 group tracking-tight ${className}`}>
       <LogoEmblem isLight={isLight} className={iconSizes[size]} />
 
       {!iconOnly && (
@@ -84,6 +80,16 @@ export const Logo: React.FC<LogoProps> = ({
           </span>
         </div>
       )}
-    </Link>
+    </div>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="inline-flex">
+        {content}
+      </Link>
+    );
+  }
+
+  return content;
 };
